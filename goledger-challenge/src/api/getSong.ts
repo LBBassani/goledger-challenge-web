@@ -104,3 +104,33 @@ export async function getSongsByAlbumKey(id: string) {
     }))
     return songList;
 }
+
+/* Search songs */
+export async function searchSongs(search: string) : Promise<Array<ISong>> {
+    const query = {
+        query: {
+            selector: {
+                '@assetType': 'song'
+            }
+        }
+    };
+    const endpoint = `${import.meta.env.VITE_SERVER_URL}/query/search`;
+    const response = await axios.post(endpoint, query);
+
+    const songAssetList = response.data.result;
+    const songList : Array<ISong> = await Promise.all((songAssetList.map(async (songAsset: { [x: string]: any; album: { [x: string]: string; }; artist: { [x: string]: string; }[]; title: any; explicit: any; }) : Promise<ISong> => {
+        const albumBrief = await getAlbumBriefByKey(songAsset.album['@key']);
+        return {
+            key : songAsset['@key'],
+            assetType : songAsset['@assetType'],
+            title: songAsset.title,
+            explicit: songAsset.explicit,
+            album: albumBrief,
+            lastTouch: {
+                byWho: songAsset['@lastTouchBy'],
+                transactionType: songAsset['@lastTx']
+            },
+        }
+    })))
+    return songList;
+}

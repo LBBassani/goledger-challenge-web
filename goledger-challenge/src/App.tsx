@@ -1,33 +1,64 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
+import IArtist from './types/artist';
+import IAlbum from './types/album';
+import ISong from './types/song';
+import { searchAlbums } from './api/getAlbum';
+import { searchArtists } from './api/getArtist';
+import { searchSongs } from './api/getSong';
+import List from './components/common/list';
+import ArtistPreview from './components/artist/artistPreview';
+import AlbumPreview from './components/album/albumPreview';
+import SongPreview from './components/song/songPreview';
 
 function App() {
-  const [count, setCount] = useState(0)
 
+  const [artistList, setArtistList] = useState<Array<IArtist>>();
+  const [albumList, setAlbumList] = useState<Array<IAlbum>>();
+  const [songList, setSongList] = useState<Array<ISong>>();
+  const [searchString, setSearchString] = useState('');
+
+  async function fetchArtists(search : string) {
+    const artists = await searchArtists(search);
+    setArtistList(artists);
+  }
+
+  async function fetchAlbums(search : string) {
+    const albums = await searchAlbums(search);
+    setAlbumList(albums);
+  }
+
+  async function fetchSongs(search : string) {
+    const songs = await searchSongs(search);
+    setSongList(songs);
+  }
+
+  useEffect(() => {
+    fetchArtists(searchString);
+    fetchAlbums(searchString);
+    fetchSongs(searchString);
+  },[searchString])
+  
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>GoMusic</h1>
+      <h2>Artists</h2>
+      <List>{artistList?.map((artist) => {
+        return <ArtistPreview artist={artist} key={artist.key}/>
+      })}</List>
+      <h2>Albums</h2>
+      <List>
+        {albumList?.map((album) => {
+          return <AlbumPreview album={album} key={album.key}/>
+        })}
+      </List>
+      <h2>Songs</h2>
+      <List>
+        {songList?.map((song) => {
+          return <SongPreview song={song} key={song.key}/>
+        })}
+      </List>
+      <h2>Playlists</h2>
     </>
   )
 }

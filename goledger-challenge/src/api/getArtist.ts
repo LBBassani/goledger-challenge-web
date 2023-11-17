@@ -51,3 +51,32 @@ export async function getArtistBriefByKey(id: string) : Promise<IArtist> {
         }
     }
 }
+
+/* Search artists */
+export async function searchArtists(search:string) {
+    const query = {
+        query: {
+            selector: {
+                '@assetType': 'artist',
+            }
+        }
+    };
+    const endpoint = `${import.meta.env.VITE_SERVER_URL}/query/search`;
+    const response = await axios.post(endpoint, query);
+
+    const artistAssetList = response.data.result;
+    const artistList : Array<IArtist> = await Promise.all(artistAssetList.map(async (artistAsset: { [x: string]: any; artist: { [x: string]: string; }; rating: any; releaseDate: any; title: any; }) : Promise<IArtist> => {
+        return {
+            about: artistAsset.about,
+            name: artistAsset.name,
+            assetType : artistAsset['@assetType'],
+            key : artistAsset['@key'],
+            lastTouch: {
+                byWho : artistAsset['@lastTouchBy'],
+                transactionType: artistAsset['@lastTx']
+            }
+        }
+    }))
+    
+    return artistList;
+}
