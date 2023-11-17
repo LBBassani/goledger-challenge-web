@@ -6,5 +6,5 @@ export default interface IAlbum extends BlockChainAsset{
     title: string,
     rating: number,
     releaseDate: string,
-    artist: IArtist
+    artist?: IArtist
 }

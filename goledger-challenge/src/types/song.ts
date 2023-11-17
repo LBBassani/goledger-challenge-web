@@ -6,6 +6,6 @@ import BlockChainAsset from "./blockChainAsset";
 export default interface ISong extends BlockChainAsset {
     title : string,
     explicit : boolean,
-    artists : Array<IArtist>,
-    album : IAlbum
+    artists? : Array<IArtist>,
+    album? : IAlbum
 }
