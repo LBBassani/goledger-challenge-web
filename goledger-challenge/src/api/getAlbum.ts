@@ -28,6 +28,40 @@ export async function getAlbumBriefByKey(id:string) : Promise<IAlbum> {
     }
 }
 
+/* Returns the complete data of the artist indicated by id/key */
+export async function getAlbumByKey(id: string) : Promise<IAlbum> {
+    const query = {
+        key: {
+            '@key' : id 
+        }
+    };
+    const endpoint = `${import.meta.env.VITE_SERVER_URL}/query/readAssetHistory`;
+    const response = await axios.post(endpoint, query);
+
+    const albumHistory = response.data;
+    const albumAsset = albumHistory[0];
+
+    const artist = await getArtistBriefByKey(albumAsset.artist['@key']);
+
+    return {
+        assetType: albumAsset['@assetType'],
+        key: albumAsset['@key'],
+        rating: albumAsset.rating,
+        releaseDate: albumAsset.releaseDate,
+        title: albumAsset.title,
+        artist: artist,
+        lastTouch: {
+            byWho: albumAsset['@lastTouchBy'],
+            transactionType: albumAsset['@lastTx'],
+            isDeleted: albumAsset['_isDelete'],
+            timestamp: albumAsset['_timestamp'],
+            transactionId: albumAsset['_txId']
+        }
+    }
+    
+}
+
+/* Returns all albums by artist indicated by id/key */
 export async function getAlbumsByArtistKey(id: string) : Promise<Array<IAlbum>> {
     const query = {
         query: {
