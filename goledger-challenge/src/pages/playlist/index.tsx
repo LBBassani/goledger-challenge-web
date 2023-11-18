@@ -2,19 +2,41 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPlaylistByKey } from "../../api/playlistApi/getPlaylist";
 import IPlaylist from "../../types/playlist";
+import { InfoPageTitle, InfoSection, InfoSectionTitle } from "../../styles/infoPage";
+import List from "../../components/common/list";
+import SongPreview from "../../components/song/songPreview";
+import formatTransactionText from "../../utils/formatTransactionText";
 
 export default function Playlist(){
-    const {id} = useParams();
-    const [playlistInfo, setPlaylistInfo] = useState<IPlaylist>();
+     const {id} = useParams();
+     const [playlistInfo, setPlaylistInfo] = useState<IPlaylist>();
+     const [transactionText, setTransactionText] = useState('');
 
-   async function fetchPlaylistInfo(key: string) {
-        const playlistInfoAsset = await getPlaylistByKey(key);
-        setPlaylistInfo(playlistInfoAsset);
-   }
+     async function fetchPlaylistInfo(key: string) {
+          const playlistInfoAsset = await getPlaylistByKey(key);
+          setPlaylistInfo(playlistInfoAsset);
+          const newTransactionText = formatTransactionText(playlistInfoAsset.lastTouch.transactionType, playlistInfoAsset.lastTouch.byWho, playlistInfoAsset.lastTouch.timestamp);
+          setTransactionText(newTransactionText);
+     }
 
-   useEffect(()=> {
-        if(id) fetchPlaylistInfo(id);
-   }, [id]);
+     useEffect(()=> {
+          if(id) fetchPlaylistInfo(id);
+     }, [id]);
 
-    return <>Playlist: {JSON.stringify(playlistInfo)}</>
+     return <>
+          <InfoPageTitle>{playlistInfo?.name || 'Playlist'}</InfoPageTitle>
+          <p>{transactionText}</p>
+          <InfoSection>
+               <InfoSectionTitle>Description</InfoSectionTitle>
+               <p>About: {playlistInfo?.description}</p>
+          </InfoSection>
+          <InfoSection>
+               <InfoSectionTitle>Songs</InfoSectionTitle>
+               <List>
+                    {playlistInfo?.songs?.map((song) => {
+                         return <SongPreview song={song} key={song.key}/>
+                    })}
+               </List>
+          </InfoSection>
+     </>
 }
