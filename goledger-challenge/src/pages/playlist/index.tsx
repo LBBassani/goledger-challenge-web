@@ -6,6 +6,7 @@ import { InfoPageTitle, InfoSection, InfoSectionTitle } from "../../styles/infoP
 import List from "../../components/common/list";
 import SongPreview from "../../components/song/songPreview";
 import formatTransactionText from "../../utils/formatTransactionText";
+import { enqueueSnackbar } from "notistack";
 
 export default function Playlist(){
      const {id} = useParams();
@@ -17,11 +18,16 @@ export default function Playlist(){
           setPlaylistInfo(playlistInfoAsset);
           const newTransactionText = formatTransactionText(playlistInfoAsset.lastTouch.transactionType, playlistInfoAsset.lastTouch.byWho, playlistInfoAsset.lastTouch.timestamp);
           setTransactionText(newTransactionText);
+          enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
      }
 
      useEffect(()=> {
           if(id) fetchPlaylistInfo(id);
-     }, [id]);
+     }, [id])
+
+     useEffect(() => {
+          enqueueSnackbar({message: 'Loading...', variant: 'info'});
+     }, [])
 
      return <>
           <InfoPageTitle>{playlistInfo?.name || 'Playlist'}</InfoPageTitle>

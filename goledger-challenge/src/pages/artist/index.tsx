@@ -11,6 +11,7 @@ import List from "../../components/common/list";
 import AlbumPreview from "../../components/album/albumPreview";
 import SongPreview from "../../components/song/songPreview";
 import formatTransactionText from "../../utils/formatTransactionText";
+import { enqueueSnackbar } from "notistack";
 
 export default function Artist(){
     const {id} = useParams();
@@ -28,11 +29,16 @@ export default function Artist(){
         setSongList(songListAsset);
         const newTransactionText = formatTransactionText(artistAsset.lastTouch.transactionType, artistAsset.lastTouch.byWho, artistAsset.lastTouch.timestamp);
         setTransactionText(newTransactionText);
+        enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     useEffect(() => {
         if(id) fetchArtist(id);
     }, [id])
+    
+    useEffect(() => {
+        enqueueSnackbar({message: 'Loading...', variant: 'info'});
+    }, [])
 
     return <>
             <InfoPageTitle>{artist?.name || 'Artist Name'}</InfoPageTitle>

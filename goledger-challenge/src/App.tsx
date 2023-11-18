@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import NavigationBar from './components/common/navigationBar';
 import { AppHeader, AppLogo, AppWrapper } from './styles';
 import SearchBar from './components/common/searchBar';
+import { SnackbarProvider } from 'notistack';
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
   
   return (
     <>
+     <SnackbarProvider />
      <header>
       <AppHeader>
         <AppLogo>GoMusic</AppLogo>

@@ -7,6 +7,7 @@ import ArtistPreview from "../../components/artist/artistPreview";
 import AlbumPreview from "../../components/album/albumPreview";
 import { InfoPageTitle, InfoSection, InfoSectionTitle } from "../../styles/infoPage";
 import formatTransactionText from "../../utils/formatTransactionText";
+import { enqueueSnackbar } from "notistack";
 
 export default function Song(){
     const {id} = useParams();
@@ -18,12 +19,16 @@ export default function Song(){
         setSongInfo(songAsset);
         const newTransactionText = formatTransactionText(songAsset.lastTouch.transactionType, songAsset.lastTouch.byWho, songAsset.lastTouch.timestamp);
         setTransactionText(newTransactionText);
+        enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     useEffect(()=>{
         if(id) fetchSongInfo(id);
-    }, [id]);
+    }, [id])
 
+    useEffect(() => {
+         enqueueSnackbar({message: 'Loading...', variant: 'info'});
+    }, [])
     
     return <>
         <InfoPageTitle>{songInfo?.title ? songInfo?.title : 'Song Title' }</InfoPageTitle>

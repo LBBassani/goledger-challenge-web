@@ -3,15 +3,18 @@ import ISong from "../../types/song";
 import { searchSongs } from "../../api/getSong";
 import List from "../../components/common/list";
 import SongPreview from "../../components/song/songPreview";
+import { enqueueSnackbar } from "notistack";
 
 export default function SongList(){
     const [songList, setSongList] = useState<Array<ISong>>();
     async function fetchSongs(search : string) {
         const songs = await searchSongs(search);
         setSongList(songs);
+        enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
-    useEffect(() => {
+    useEffect(()=> {
+        enqueueSnackbar({message: 'Loading...', variant: 'info'});
         fetchSongs('');
     },[])
     return <>

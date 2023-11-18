@@ -11,6 +11,7 @@ import ArtistPreview from "../../components/artist/artistPreview";
 import List from "../../components/common/list";
 import SongPreview from "../../components/song/songPreview";
 import formatTransactionText from "../../utils/formatTransactionText";
+import { enqueueSnackbar } from "notistack";
 
 export default function Album(){
     const {id} = useParams();
@@ -27,11 +28,16 @@ export default function Album(){
         setAlbumDate(DateTime.fromISO(albumAsset.releaseDate));
         const newTransactionText = formatTransactionText(albumAsset.lastTouch.transactionType, albumAsset.lastTouch.byWho, albumAsset.lastTouch.timestamp);
         setTransactionText(newTransactionText);
+        enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     useEffect(()=> {
         if(id) fetchAlbumInfo(id);
-    }, [id]);
+    }, [id])
+
+    useEffect(() => {
+        enqueueSnackbar({message: 'Loading...', variant: 'info'});
+    }, [])
 
     return <>
                 <InfoPageTitle>{albumInfo?.title ? `${albumInfo?.title} (${albumDate?.year})` : 'Album Title'}</InfoPageTitle>

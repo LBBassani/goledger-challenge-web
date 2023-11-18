@@ -3,6 +3,7 @@ import List from "../../components/common/list";
 import { searchPlaylist } from "../../api/playlistApi/getPlaylist";
 import IPlaylist from "../../types/playlist";
 import PlaylistPreview from "../../components/playlist/playlistPreview";
+import { enqueueSnackbar } from "notistack";
 
 export default function PlaylistList(){
     const [playlistList, setPlaylistList] = useState<Array<IPlaylist>>();
@@ -10,9 +11,11 @@ export default function PlaylistList(){
     async function fetchPlaylists(search:string) {
         const playlistsAsset = await searchPlaylist(search);
         setPlaylistList(playlistsAsset);
+        enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     useEffect(()=> {
+        enqueueSnackbar({message: 'Loading...', variant: 'info'});
         fetchPlaylists('');
     }, []);
     
