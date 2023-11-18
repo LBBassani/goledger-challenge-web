@@ -1,14 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { SearchBarWrapper, SearchButton, SearchInput, SearchInputWrapper } from "./styles";
+import { SearchBarWrapper, SearchInput, SearchInputWrapper } from "./styles";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { ActionButtonWrapper } from "../../../styles";
 
 export default function SearchBar(){
     return <SearchBarWrapper>
         <SearchInputWrapper>
             <SearchInput/>
-            <SearchButton>
+            <ActionButtonWrapper>
                 <FontAwesomeIcon color="darkgray" icon={faSearch}/>
-            </SearchButton>
+            </ActionButtonWrapper>
         </SearchInputWrapper>
     </SearchBarWrapper>
 }

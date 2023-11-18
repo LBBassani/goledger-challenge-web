@@ -4,7 +4,7 @@ import { getAlbumByKey } from "../../api/getAlbum";
 import IAlbum from "../../types/album";
 import ISong from "../../types/song";
 import { getSongsByAlbumKey } from "../../api/getSong";
-import { InfoPageTitle, InfoSection, InfoSectionTitle } from "../../styles/infoPage";
+import { InfoPageTitle, InfoSection, InfoSectionTitle } from "../../components/common/infoPage/styles";
 import { DateTime } from "luxon";
 import { dateWithoutHourFormat } from "../../utils/dateFormat";
 import ArtistPreview from "../../components/artist/artistPreview";

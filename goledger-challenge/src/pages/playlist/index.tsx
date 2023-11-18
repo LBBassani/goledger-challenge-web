@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPlaylistByKey } from "../../api/playlistApi/getPlaylist";
 import IPlaylist from "../../types/playlist";
-import { InfoPageTitle, InfoSection, InfoSectionTitle } from "../../styles/infoPage";
+import { InfoPageTitle, InfoSection, InfoSectionTitle } from "../../components/common/infoPage/styles";
 import List from "../../components/common/list";
 import SongPreview from "../../components/song/songPreview";
 import formatTransactionText from "../../utils/formatTransactionText";

@@ -34,7 +34,7 @@ h1 {
   line-height: 1.1;
 }
 
-button, input {
+button, input, textarea {
   outline: none;
   background-color: transparent;
   border: none;
@@ -49,4 +49,8 @@ button, input {
   a:hover {
     color: #747bff;
   }
+}
+
+*{
+  box-sizing: border-box;
 }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import IArtist from '../types/artist';
+import IArtist from '../../types/artist';
 
 /* Returns the complete data of the artist indicated by the id/key */
 export async function getArtistByKey(id:string) : Promise<IArtist>{

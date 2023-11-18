@@ -18,8 +18,3 @@ export const SearchInput = styled.input`
     border: none;
     padding: 8px;
 `
-
-export const SearchButton = styled.button`
-    cursor: pointer;
-    padding: 8px;
-`

@@ -5,7 +5,7 @@ import { getSongByKey } from "../../api/getSong";
 import List from "../../components/common/list";
 import ArtistPreview from "../../components/artist/artistPreview";
 import AlbumPreview from "../../components/album/albumPreview";
-import { InfoPageTitle, InfoSection, InfoSectionTitle } from "../../styles/infoPage";
+import { InfoPageTitle, InfoSection, InfoSectionTitle } from "../../components/common/infoPage/styles";
 import formatTransactionText from "../../utils/formatTransactionText";
 import { enqueueSnackbar } from "notistack";
 
@@ -27,7 +27,7 @@ export default function Song(){
     }, [id])
 
     useEffect(() => {
-         enqueueSnackbar({message: 'Loading...', variant: 'info'});
+        enqueueSnackbar({message: 'Loading...', variant: 'info'});
     }, [])
     
     return <>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { searchArtists } from "../../api/getArtist";
+import { searchArtists } from "../../api/artistApi/getArtist";
 import List from "../../components/common/list";
 import ArtistPreview from "../../components/artist/artistPreview";
 import IArtist from "../../types/artist";
