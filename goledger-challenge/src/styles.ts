@@ -13,3 +13,7 @@ export const AppLogo = styled.h1`
     font-size: 32px;
 `
 
+export const AppWrapper = styled.div`
+    padding: 0 16px;
+`
+

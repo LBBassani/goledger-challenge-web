@@ -5,6 +5,9 @@ import Song from "./pages/song";
 import Album from "./pages/album";
 import ArtistList from "./pages/artistList";
 import AlbumList from "./pages/albumList";
+import SongList from "./pages/songList";
+import PlaylistList from "./pages/playlistList";
+import Playlist from "./pages/playlist";
 const router = createBrowserRouter([
     {
       path: "/",
@@ -17,11 +20,15 @@ const router = createBrowserRouter([
         },
         {
           path: "/song",
-          element: <Song/>
+          element: <SongList/>
         },
         {
           path: "/album",
           element: <AlbumList/>
+        },
+        {
+          path: "/playlist",
+          element: <PlaylistList/>
         },
         {
           path: "/artist/:id",
@@ -34,7 +41,11 @@ const router = createBrowserRouter([
         {
           path: "/album/:id",
           element: <Album/>
-        }
+        },
+        {
+          path: "/playlist/:id",
+          element: <Playlist/>
+        },
 
       ]
     },

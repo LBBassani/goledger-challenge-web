@@ -39,6 +39,34 @@ export async function getSongByKey(id: string) : Promise<ISong> {
     }
 }
 
+/* Returns brief of song by indicated id/key */
+export async function getSongBriefByKey(id: string) {
+    const query = {
+        key: {
+            '@key' : id 
+        }
+    };
+    const endpoint = `${import.meta.env.VITE_SERVER_URL}/query/readAsset`;
+    const response = await axios.post(endpoint, query);
+
+    const songAsset = response.data;
+    const artists = await Promise.all(songAsset.artists.map((artistAsset: { [x: string]: string; }) : Promise<IArtist> => {
+        return getArtistBriefByKey(artistAsset['@key']);
+    }))
+    return {
+        key : songAsset['@key'],
+        assetType : songAsset['@assetType'],
+        title: songAsset.title,
+        explicit: songAsset.explicit,
+        artists: artists,
+        lastTouch: {
+            byWho: songAsset['@lastTouchBy'],
+            transactionType: songAsset['@lastTx']
+        },
+    }
+    
+}
+
 /* Returns the song list of the artist indicated by the id/key */
 export async function getSongsByArtistKey(id: string) : Promise<Array<ISong>> {
     const query = {
