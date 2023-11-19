@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getArtistByKey } from "../../api/artistApi/getArtist";
 import { useEffect, useState } from "react";
 import IArtist from "../../types/artist";
@@ -29,6 +29,7 @@ export default function Artist(){
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [aboutValue, setAboutValue] = useState('');
+    const navigate = useNavigate();
 
     async function fetchArtist(id: string) {
         const artistAsset = await getArtistByKey(id);
@@ -56,7 +57,8 @@ export default function Artist(){
             enqueueSnackbar({message: 'Deleting data from server', variant: 'info'});
             try{
                 await deleteArtistByKey(artist.key);
-                enqueueSnackbar({message: 'Album deleted successfully', variant: 'success'});
+                enqueueSnackbar({message: 'Artist deleted successfully', variant: 'success'});
+                navigate('/artist/')
             }catch(error){
                 enqueueSnackbar({message: 'Something went wrong', variant: 'error'});
                 if(isAxiosError(error))

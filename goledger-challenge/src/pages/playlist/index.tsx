@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getPlaylistByKey } from "../../api/playlistApi/getPlaylist";
 import IPlaylist from "../../types/playlist";
 import { InfoSection, InfoSectionTitle } from "../../components/common/infoPage/styles";
@@ -23,6 +23,7 @@ export default function Playlist(){
      const [showEditModal, setShowEditModal] = useState(false);
      const [playlistSongs, setPlaylistSongs] = useState<Array<string>>([]);
      const [description, setDescriptionValue] = useState('');
+     const navigate = useNavigate();
 
      async function fetchPlaylistInfo(key: string) {
           const playlistInfoAsset = await getPlaylistByKey(key);
@@ -46,7 +47,8 @@ export default function Playlist(){
                enqueueSnackbar({message: 'Deleting data from server', variant: 'info'});
                try{
                     await deletePlaylistByKey(playlistInfo.key);
-                    enqueueSnackbar({message: 'Album deleted successfully', variant: 'success'});
+                    enqueueSnackbar({message: 'Playlist deleted successfully', variant: 'success'});
+                    navigate('/playlist/');
                }catch(error){
                     enqueueSnackbar({message: 'Something went wrong', variant: 'error'});
                     if(isAxiosError(error))

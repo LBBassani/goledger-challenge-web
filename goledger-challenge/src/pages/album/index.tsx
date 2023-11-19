@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getAlbumByKey } from "../../api/albumApi/getAlbum";
 import IAlbum from "../../types/album";
 import ISong from "../../types/song";
@@ -30,6 +30,7 @@ export default function Album(){
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [releaseDate, setReleaseDate] = useState('');
     const [rating, setRating] = useState('');
+    const navigate = useNavigate();
 
     async function fetchAlbumInfo( key: string) {
         const albumAsset = await getAlbumByKey(key);
@@ -56,6 +57,7 @@ export default function Album(){
             try{
                 await deleteAlbumByKey(albumInfo.key);
                 enqueueSnackbar({message: 'Album deleted successfully', variant: 'success'});
+                navigate('/album/');
             }catch(error){
                 enqueueSnackbar({message: 'Something went wrong', variant: 'error'});
                 if(isAxiosError(error))

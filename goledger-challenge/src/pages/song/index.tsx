@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ISong from "../../types/song";
 import { getSongByKey } from "../../api/songApi/getSong";
 import List from "../../components/common/list";
@@ -26,6 +26,7 @@ export default function Song(){
     const [explicit, setExplicit] = useState(false);
     const [album, setAlbum] = useState<IAlbum>();
     const [albumKey, setAlbumKey] = useState('');
+    const navigate = useNavigate();
 
     async function fetchSongInfo(key: string) {
         const songAsset = await getSongByKey(key);
@@ -55,7 +56,8 @@ export default function Song(){
             enqueueSnackbar({message: 'Deleting data from server', variant: 'info'});
             try{
                 await deleteSongByKey(songInfo.key);
-                enqueueSnackbar({message: 'Album deleted successfully', variant: 'success'});
+                enqueueSnackbar({message: 'Song deleted successfully', variant: 'success'});
+                navigate('/song');
             }catch(error){
                 enqueueSnackbar({message: 'Something went wrong', variant: 'error'});
                 if(isAxiosError(error))
