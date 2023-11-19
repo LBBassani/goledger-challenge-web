@@ -11,10 +11,11 @@ type DropDownProps = {
 export default function DropDown({name, label, options, onChange, value}: DropDownProps){
     return <SelectWrapper>
         <StyledLabel htmlFor={name}>{label}</StyledLabel>
-        <StyledSelect id={name} onChange={(event) => {onChange(event.target.value)}}>
+        <StyledSelect value={value} id={name} onChange={(event) => {onChange(event.target.value)}}>
+            <StyledOption>Select Option</StyledOption>
             {
                 options.map((option) => {
-                    return <StyledOption selected={option.value === value} key={option.value} value={option.value}>{option.label}</StyledOption>
+                    return <StyledOption key={option.value} value={option.value}>{option.label}</StyledOption>
                 })
             }
         </StyledSelect>

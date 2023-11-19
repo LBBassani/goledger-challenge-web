@@ -4,10 +4,13 @@ import { searchPlaylist } from "../../api/playlistApi/getPlaylist";
 import IPlaylist from "../../types/playlist";
 import PlaylistPreview from "../../components/playlist/playlistPreview";
 import { enqueueSnackbar } from "notistack";
+import { InfoPageHeader } from "../../components/common/infoPage";
+import PlaylistCreateForm from "../../components/playlist/playlistCreateForm";
 
 export default function PlaylistList(){
     const [playlistList, setPlaylistList] = useState<Array<IPlaylist>>();
-    
+    const [showCreateModal, setShowCreateModal] = useState(false);
+
     async function fetchPlaylists(search:string) {
         const playlistsAsset = await searchPlaylist(search);
         setPlaylistList(playlistsAsset);
@@ -20,7 +23,16 @@ export default function PlaylistList(){
     }, []);
     
     return <>
-        <h2>Playlists</h2>
+        {
+            showCreateModal &&
+            <PlaylistCreateForm
+                onClose={() => {setShowCreateModal(false)}}
+            />
+        }
+        <InfoPageHeader 
+            title="Playlists"
+            onCreate={() => {setShowCreateModal(true)}}
+        />
         <List>
             {playlistList?.map((playlist)=> {
                 return <PlaylistPreview playlist={playlist} key={playlist.key}/>

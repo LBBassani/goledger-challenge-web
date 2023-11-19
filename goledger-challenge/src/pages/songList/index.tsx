@@ -4,9 +4,13 @@ import { searchSongs } from "../../api/songApi/getSong";
 import List from "../../components/common/list";
 import SongPreview from "../../components/song/songPreview";
 import { enqueueSnackbar } from "notistack";
+import { InfoPageHeader } from "../../components/common/infoPage";
+import SongCreateForm from "../../components/song/songCreateForm";
 
 export default function SongList(){
     const [songList, setSongList] = useState<Array<ISong>>();
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    
     async function fetchSongs(search : string) {
         const songs = await searchSongs(search);
         setSongList(songs);
@@ -18,7 +22,13 @@ export default function SongList(){
         fetchSongs('');
     },[])
     return <>
-        <h2>Songs</h2>
+        {
+            showCreateModal &&
+            <SongCreateForm
+                onClose={() => {setShowCreateModal(false)}}
+            />
+        }
+        <InfoPageHeader title="Songs" onCreate={() => setShowCreateModal(true)}/>
         <List>
             {songList?.map((song) => {
                 return <SongPreview song={song} key={song.key}/>

@@ -1,14 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ActionButtonWrapper } from "../../../styles";
 import { InfoPageHeaderActionWrapper, InfoPageHeaderWrapper, InfoPageTitle } from "./styles";
-import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 type InfoPageHeaderProps = {
-    title: string;
-    onEdit?: () => void;
-    onDelete?: () => void;
+    title: string
+    onEdit?: () => void
+    onDelete?: () => void
+    onCreate?: () => void
 }
-export function InfoPageHeader({title, onEdit, onDelete} : InfoPageHeaderProps){
+export function InfoPageHeader({title, onEdit, onDelete, onCreate} : InfoPageHeaderProps){
 
     return <InfoPageHeaderWrapper>
         <InfoPageTitle>{title}</InfoPageTitle>
@@ -23,6 +24,12 @@ export function InfoPageHeader({title, onEdit, onDelete} : InfoPageHeaderProps){
                 onDelete &&
                 <ActionButtonWrapper onClick={onDelete}>
                     <FontAwesomeIcon icon={faTrash} />
+                </ActionButtonWrapper>
+            }
+            {
+                onCreate &&
+                <ActionButtonWrapper onClick={onCreate}>
+                    <FontAwesomeIcon icon={faPlus} />
                 </ActionButtonWrapper>
             }
         </InfoPageHeaderActionWrapper>

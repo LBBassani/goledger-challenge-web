@@ -12,7 +12,7 @@ type PlaylistEditFormProps = {
 
 export default function PlaylistEditForm({descriptionValue, descriptionOnChange, songValues, songValuesOnChange} : PlaylistEditFormProps) {
     
-    const [songOptions, setSongOptions] = useState<Array<{label: string, value: string}>>([{label: 'Aguarde', value: 'null-song'}]);
+    const [songOptions, setSongOptions] = useState<Array<{label: string, value: string}>>([{label: 'Loading', value: 'null-song'}]);
 
     async function getSongOptions() {
         const songListAsset = await searchSongs('');

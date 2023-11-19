@@ -1,0 +1,70 @@
+import { useEffect, useState } from "react";
+import Modal from "../../common/modal";
+import { searchArtists } from "../../../api/artistApi/getArtist";
+import { useNavigate } from "react-router-dom";
+import { enqueueSnackbar } from "notistack";
+import { createAlbum } from "../../../api/albumApi/createAlbum";
+import { isAxiosError } from "axios";
+import TextInput from "../../common/textInput";
+import DropDown from "../../common/dropDown";
+import { DateTime } from "luxon";
+
+type AlbumCreateFormProps = {
+    onClose: () => void
+}
+
+export default function AlbumCreateForm({onClose}: AlbumCreateFormProps){
+
+    const [albumTitle, setAlbumTitle] = useState('');
+    const [albumRating, setAlbumRating] = useState(0);
+    const [albumReleaseDate, setAlbumReleaseDate] = useState('');
+    const [artistKey, setArtistKey] = useState('');
+    const [artistOptions, setArtistOptions] = useState<Array<{label: string, value: string}>>([{label: 'Aguarde', value: 'null-artist'}]);
+    const navigate = useNavigate();
+
+    async function getArtistOptions() {
+        const artistList = await searchArtists('');
+        if(artistList){
+            const artistOptionsList = artistList.map((artist) => {return {label: artist.name, value: artist.key}});
+            setArtistOptions(artistOptionsList);
+        }
+    }
+
+    useEffect(() => {
+        getArtistOptions();
+    }, [])
+
+    function closeForm(){
+        setAlbumRating(0);
+        setAlbumReleaseDate('');
+        setAlbumTitle('');
+        setArtistKey('');
+        onClose();
+    }
+
+    async function create() {
+        enqueueSnackbar({message: 'Sending data', variant: 'info'});
+        try{
+            const newAlbum = await createAlbum(albumTitle, DateTime.fromSQL(albumReleaseDate).toUTC().toISO() || '', albumRating, artistKey);
+            closeForm();
+            enqueueSnackbar({message: 'Album created successfully', variant: 'success'});
+            navigate(`/album/${newAlbum['@key']}`);
+        }catch(error){
+            console.log(error);
+            enqueueSnackbar({message: 'Something went wrong', variant: 'error'});
+            if(isAxiosError(error)) enqueueSnackbar({message: error.response?.data, variant: 'error'});
+        }
+    }
+    
+    return <Modal 
+        title="Create Album"
+        onClose={closeForm}
+        confirmText="Create"
+        onConfirm={create}
+        >
+            <TextInput name="title" type="text" label="Title" value={albumTitle} onChange={setAlbumTitle}/>
+            <TextInput type="number" label="Rating" name="rating" value={String(albumRating)} onChange={(value) => {setAlbumRating(parseInt(value))}}/>
+            <TextInput type="date" label="Release Date" name="releaseDate" value={albumReleaseDate} onChange={setAlbumReleaseDate}/>
+            <DropDown label="Artist" name="artist" onChange={setArtistKey} value={artistKey} options={artistOptions} />
+        </Modal>
+}
