@@ -14,7 +14,7 @@ export default function TextInput({name, type, label, value, onChange} : TextInp
         {
             type === 'textarea' ?
             <StyledTextArea id={name} value={value} onChange={(event) => {onChange(String(event.target.value))}}/> :
-            <StyledInput id={name} value={value} onChange={(event) => {onChange(String(event.target.value))}}/>
+            <StyledInput type={type} id={name} value={value} onChange={(event) => {onChange(String(event.target.value))}}/>
         }
     </TextInputWrapper> 
 }

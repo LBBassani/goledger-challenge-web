@@ -1,6 +1,6 @@
 import axios from "axios";
-import IAlbum from "../types/album";
-import { getArtistBriefByKey } from "./artistApi/getArtist";
+import IAlbum from "../../types/album";
+import { getArtistBriefByKey } from "../artistApi/getArtist";
 
 /* Returns brief of album by indicated id/key */
 export async function getAlbumBriefByKey(id:string) : Promise<IAlbum> {

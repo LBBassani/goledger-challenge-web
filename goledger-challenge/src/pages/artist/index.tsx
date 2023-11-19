@@ -5,7 +5,7 @@ import IArtist from "../../types/artist";
 import { getSongsByArtistKey } from "../../api/getSong";
 import ISong from "../../types/song";
 import IAlbum from "../../types/album";
-import { getAlbumsByArtistKey } from "../../api/getAlbum";
+import { getAlbumsByArtistKey } from "../../api/albumApi/getAlbum";
 import { InfoSection, InfoSectionTitle } from "../../components/common/infoPage/styles";
 import List from "../../components/common/list";
 import AlbumPreview from "../../components/album/albumPreview";
@@ -29,7 +29,6 @@ export default function Artist(){
     async function fetchArtist(id: string) {
         const artistAsset = await getArtistByKey(id);
         setArtist(artistAsset);
-        setAboutValue(artistAsset.about);
         const albumListAsset = await getAlbumsByArtistKey(id);
         setAlbumList(albumListAsset);
         const songListAsset = await getSongsByArtistKey(id);
@@ -56,6 +55,7 @@ export default function Artist(){
         if(artist){ 
             const newTransactionText = formatTransactionText(artist.lastTouch.transactionType, artist.lastTouch.byWho, artist.lastTouch.timestamp);
             setTransactionText(newTransactionText);
+            setAboutValue(artist.about);
         }
     }, [artist])
 

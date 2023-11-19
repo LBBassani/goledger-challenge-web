@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import IAlbum from "../../types/album"
-import { searchAlbums } from "../../api/getAlbum";
+import { searchAlbums } from "../../api/albumApi/getAlbum";
 import List from "../../components/common/list";
 import AlbumPreview from "../../components/album/albumPreview";
 import { enqueueSnackbar } from "notistack";

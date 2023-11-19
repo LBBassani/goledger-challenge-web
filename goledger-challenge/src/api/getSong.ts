@@ -1,6 +1,6 @@
 import axios from "axios";
 import ISong from "../types/song";
-import { getAlbumBriefByKey } from "./getAlbum";
+import { getAlbumBriefByKey } from "./albumApi/getAlbum";
 import { getArtistBriefByKey } from "./artistApi/getArtist";
 import IArtist from "../types/artist";
 
