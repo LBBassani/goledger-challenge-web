@@ -39,6 +39,9 @@ export const ModalFooter = styled.div`
 `
 export const ModalContent = styled.div`
     flex: auto;
+    max-height: 300px;
+    overflow: auto;
+    margin: 8px 0;
 `
 export const ModalTitle = styled.h3`
     
