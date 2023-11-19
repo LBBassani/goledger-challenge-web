@@ -45,9 +45,9 @@ export async function getPlaylistByKey(id:string) : Promise<IPlaylist> {
     const playlistHistory = response.data;
     const playlistAsset = playlistHistory[0];
 
-    const songList = await Promise.all(playlistAsset.songs.map((song: { [x: string]: string; }) => {
+    const songList = await Promise.all(playlistAsset.songs?.map((song: { [x: string]: string; }) => {
         return getSongBriefByKey(song['@key']);
-    }))
+    }) || [])
 
     return {
         key: playlistAsset['@key'],
