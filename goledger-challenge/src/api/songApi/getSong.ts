@@ -1,8 +1,8 @@
 import axios from "axios";
-import ISong from "../types/song";
-import { getAlbumBriefByKey } from "./albumApi/getAlbum";
-import { getArtistBriefByKey } from "./artistApi/getArtist";
-import IArtist from "../types/artist";
+import ISong from "../../types/song";
+import { getAlbumBriefByKey } from "../albumApi/getAlbum";
+import { getArtistBriefByKey } from "../artistApi/getArtist";
+import IArtist from "../../types/artist";
 
 /* Returns the complete data of the song indicated by id/key */
 export async function getSongByKey(id: string) : Promise<ISong> {

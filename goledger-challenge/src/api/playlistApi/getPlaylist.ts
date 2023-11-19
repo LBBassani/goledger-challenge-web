@@ -1,6 +1,6 @@
 import axios from "axios";
 import IPlaylist from "../../types/playlist";
-import { getSongBriefByKey } from "../getSong";
+import { getSongBriefByKey } from "../songApi/getSong";
 
 /* Search playlists */
 export async function searchPlaylist(search: string) : Promise<Array<IPlaylist>>{

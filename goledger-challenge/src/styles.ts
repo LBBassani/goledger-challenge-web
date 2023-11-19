@@ -36,3 +36,8 @@ export const ActionButtonWrapper = styled.button`
     cursor: pointer;
     padding: 8px;
 `
+
+export const StyledLabel = styled.label`
+    display: block;
+
+`

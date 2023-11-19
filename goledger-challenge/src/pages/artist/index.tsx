@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { getArtistByKey } from "../../api/artistApi/getArtist";
 import { useEffect, useState } from "react";
 import IArtist from "../../types/artist";
-import { getSongsByArtistKey } from "../../api/getSong";
+import { getSongsByArtistKey } from "../../api/songApi/getSong";
 import ISong from "../../types/song";
 import IAlbum from "../../types/album";
 import { getAlbumsByArtistKey } from "../../api/albumApi/getAlbum";

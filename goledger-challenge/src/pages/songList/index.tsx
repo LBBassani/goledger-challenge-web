@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ISong from "../../types/song";
-import { searchSongs } from "../../api/getSong";
+import { searchSongs } from "../../api/songApi/getSong";
 import List from "../../components/common/list";
 import SongPreview from "../../components/song/songPreview";
 import { enqueueSnackbar } from "notistack";
