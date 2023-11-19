@@ -16,6 +16,9 @@ import Modal from "../../components/common/modal";
 import AlbumEditForm from "../../components/album/albumEditForm";
 import { InfoPageHeader } from "../../components/common/infoPage";
 import { updateAlbumByKey } from "../../api/albumApi/updateAlbum";
+import { deleteAlbumByKey } from "../../api/albumApi/deleteAlbum";
+import { isAxiosError } from "axios";
+import capitalizeFirstLetter from "../../utils/capitalizeFirstLetter";
 
 export default function Album(){
     const {id} = useParams();
@@ -23,7 +26,8 @@ export default function Album(){
     const [songList, setSongList] = useState<Array<ISong>>();
     const [albumDate, setAlbumDate] = useState<DateTime>(DateTime.now());
     const [transactionText, setTransactionText] = useState('');
-    const [showModal, setShowModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [releaseDate, setReleaseDate] = useState('');
     const [rating, setRating] = useState('');
 
@@ -41,8 +45,22 @@ export default function Album(){
             const newAlbumData = {...albumInfo, rating: parseInt(rating), releaseDate: DateTime.fromSQL(releaseDate).toUTC().toISO() || albumInfo.releaseDate};
             const newAlbumAsset = await updateAlbumByKey(newAlbumData);
             setAlbumInfo(newAlbumAsset);
-            setShowModal(false);
+            setShowEditModal(false);
             enqueueSnackbar({message: 'Album updated successfully', variant: 'success'});
+        }
+    }
+
+    async function deleteAlbum() {
+        if(albumInfo){
+            enqueueSnackbar({message: 'Deleting data from server', variant: 'info'});
+            try{
+                await deleteAlbumByKey(albumInfo.key);
+                enqueueSnackbar({message: 'Album deleted successfully', variant: 'success'});
+            }catch(error){
+                enqueueSnackbar({message: 'Something went wrong', variant: 'error'});
+                if(isAxiosError(error))
+                    enqueueSnackbar({message: capitalizeFirstLetter(error.response?.data), variant: 'error'});
+            }
         }
     }
 
@@ -66,11 +84,11 @@ export default function Album(){
 
     return <>
         {
-            showModal &&
+            showEditModal &&
             <Modal 
-                title={`Editar ${albumInfo?.title}`}
-                confirmText="Salvar"
-                onClose={() => {setShowModal(false)}}
+                title={`Edit ${albumInfo?.title}`}
+                confirmText="Save"
+                onClose={() => {setShowEditModal(false)}}
                 onConfirm={() => {updateAlbumInfo(rating, releaseDate)}}
             >
                 <AlbumEditForm 
@@ -81,9 +99,24 @@ export default function Album(){
                 />
             </Modal>
         }
+        {
+            showDeleteModal && 
+            <Modal
+                title={`Delete ${albumInfo?.title}`}
+                confirmText="Delete"
+                onClose={() => {setShowDeleteModal(false)}}
+                onConfirm={() => deleteAlbum()}
+            >
+                <InfoSection>
+                    <InfoSectionTitle>Are you Sure?</InfoSectionTitle>
+                    <p>This action cannot be undone. All values associated with this album will be lost.</p>
+                </InfoSection>
+            </Modal>
+        }
         <InfoPageHeader 
             title={albumInfo?.title ? `${albumInfo?.title} (${albumDate?.year})` : 'Album Title'}
-            onEdit={() => {setShowModal(true)}}
+            onEdit={() => {setShowEditModal(true)}}
+            onDelete={() => {setShowDeleteModal(true)}}
         />
         <p>{transactionText}</p>
         <InfoSection>

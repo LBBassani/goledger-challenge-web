@@ -11,12 +11,16 @@ import { InfoPageHeader } from "../../components/common/infoPage";
 import Modal from "../../components/common/modal";
 import PlaylistEditForm from "../../components/playlist/playlistEditForm";
 import { updatePlaylistByKey } from "../../api/playlistApi/updatePlaylist";
+import { deletePlaylistByKey } from "../../api/playlistApi/deletePlaylist";
+import { isAxiosError } from "axios";
+import capitalizeFirstLetter from "../../utils/capitalizeFirstLetter";
 
 export default function Playlist(){
      const {id} = useParams();
      const [playlistInfo, setPlaylistInfo] = useState<IPlaylist>();
      const [transactionText, setTransactionText] = useState('');
-     const [showModal, setShowModal] = useState(false);
+     const [showDeleteModal, setShowDeleteModal] = useState(false);
+     const [showEditModal, setShowEditModal] = useState(false);
      const [playlistSongs, setPlaylistSongs] = useState<Array<string>>([]);
      const [description, setDescriptionValue] = useState('');
 
@@ -32,8 +36,22 @@ export default function Playlist(){
                const newPlaylistData = {...playlistInfo, description};
                const newPlaylistAsset = await updatePlaylistByKey(newPlaylistData, songs);
                setPlaylistInfo(newPlaylistAsset);
-               setShowModal(false);
+               setShowEditModal(false);
                enqueueSnackbar({message: 'Playlist updated successfully', variant: 'success'});
+          }
+     }
+
+     async function deletePlaylist() {
+          if(playlistInfo){
+               enqueueSnackbar({message: 'Deleting data from server', variant: 'info'});
+               try{
+                    await deletePlaylistByKey(playlistInfo.key);
+                    enqueueSnackbar({message: 'Album deleted successfully', variant: 'success'});
+               }catch(error){
+                    enqueueSnackbar({message: 'Something went wrong', variant: 'error'});
+                    if(isAxiosError(error))
+                         enqueueSnackbar({message: capitalizeFirstLetter(error.response?.data), variant: 'error'});
+               }
           }
      }
 
@@ -59,10 +77,10 @@ export default function Playlist(){
 
      return <>
           {
-               showModal &&
+               showEditModal &&
                <Modal 
                     title={`Editar ${playlistInfo?.name}`}
-                    onClose={() => {setShowModal(false)}}
+                    onClose={() => {setShowEditModal(false)}}
                     onConfirm={() => updatePlaylistInfo(description, playlistSongs)}
                >
                     <PlaylistEditForm 
@@ -73,9 +91,24 @@ export default function Playlist(){
                     />
                </Modal>
           }
+          {
+               showDeleteModal && 
+               <Modal
+                    title={`Delete ${playlistInfo?.name}`}
+                    confirmText="Delete"
+                    onClose={() => {setShowDeleteModal(false)}}
+                    onConfirm={() => deletePlaylist()}
+               >
+                    <InfoSection>
+                         <InfoSectionTitle>Are you Sure?</InfoSectionTitle>
+                         <p>This action cannot be undone. All values associated with this album will be lost.</p>
+                    </InfoSection>
+               </Modal>
+          }
           <InfoPageHeader 
                title={playlistInfo?.name || 'Playlist'}
-               onEdit={() => {setShowModal(true)}}
+               onEdit={() => {setShowEditModal(true)}}
+               onDelete={() => {setShowDeleteModal(true)}}
           />
           <p>{transactionText}</p>
           <InfoSection>

@@ -16,6 +16,9 @@ import Modal from "../../components/common/modal";
 import { InfoPageHeader } from "../../components/common/infoPage";
 import ArtistEditForm from "../../components/artist/artistEditForm";
 import { updateArtistByKey } from "../../api/artistApi/updateArtist";
+import { deleteArtistByKey } from "../../api/artistApi/deleteArtist";
+import { isAxiosError } from "axios";
+import capitalizeFirstLetter from "../../utils/capitalizeFirstLetter";
 
 export default function Artist(){
     const {id} = useParams();
@@ -23,7 +26,8 @@ export default function Artist(){
     const [songList, setSongList] = useState<ISong[]>();
     const [albumList, setAlbumList] = useState<IAlbum[]>();
     const [transactionText, setTransactionText] = useState('');
-    const [showModal, setShowModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
     const [aboutValue, setAboutValue] = useState('');
 
     async function fetchArtist(id: string) {
@@ -42,8 +46,22 @@ export default function Artist(){
             const newArtistData = {...artist, about};
             const newArtistAsset = await updateArtistByKey(newArtistData);
             setArtist(newArtistAsset);
-            setShowModal(false);
+            setShowEditModal(false);
             enqueueSnackbar({message: 'Artist updated successfully', variant: 'success'});
+        }
+    }
+
+    async function deleteArtist() {
+        if(artist){
+            enqueueSnackbar({message: 'Deleting data from server', variant: 'info'});
+            try{
+                await deleteArtistByKey(artist.key);
+                enqueueSnackbar({message: 'Album deleted successfully', variant: 'success'});
+            }catch(error){
+                enqueueSnackbar({message: 'Something went wrong', variant: 'error'});
+                if(isAxiosError(error))
+                    enqueueSnackbar({message: capitalizeFirstLetter(error.response?.data), variant: 'error'});
+            }
         }
     }
 
@@ -65,17 +83,31 @@ export default function Artist(){
 
     return <>
             {
-                showModal && 
+                showEditModal && 
                 <Modal 
-                    title={`Editar ${artist?.name}`} 
-                    confirmText="Salvar" 
-                    onClose={() => {setShowModal(false)}}
+                    title={`Edit ${artist?.name}`} 
+                    confirmText="Save" 
+                    onClose={() => {setShowEditModal(false)}}
                     onConfirm={() => {updateArtist(aboutValue)}}
                 >
                     <ArtistEditForm aboutValue={aboutValue} aboutOnChange={setAboutValue} />
                 </Modal>
             }
-            <InfoPageHeader title={artist?.name || 'Artist Name'} onEdit={() => {setShowModal(true)}} onDelete={() => {}}/>
+            {
+            showDeleteModal && 
+            <Modal
+                title={`Delete ${artist?.name}`}
+                confirmText="Delete"
+                onClose={() => {setShowDeleteModal(false)}}
+                onConfirm={() => deleteArtist()}
+            >
+                <InfoSection>
+                    <InfoSectionTitle>Are you Sure?</InfoSectionTitle>
+                    <p>This action cannot be undone. All values associated with this album will be lost.</p>
+                </InfoSection>
+            </Modal>
+        }
+            <InfoPageHeader title={artist?.name || 'Artist Name'} onEdit={() => {setShowEditModal(true)}} onDelete={() => {setShowDeleteModal(true)}}/>
             <p>{transactionText}</p>
             <InfoSection>
                 <InfoSectionTitle>Description</InfoSectionTitle>

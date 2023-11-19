@@ -13,12 +13,16 @@ import SongEditForm from "../../components/song/songEditForm";
 import IAlbum from "../../types/album";
 import { InfoPageHeader } from "../../components/common/infoPage";
 import { updateSongByKey } from "../../api/songApi/updateSong";
+import { deleteSongByKey } from "../../api/songApi/deleteSong";
+import { isAxiosError } from "axios";
+import capitalizeFirstLetter from "../../utils/capitalizeFirstLetter";
 
 export default function Song(){
     const {id} = useParams();
     const [songInfo, setSongInfo] = useState<ISong>();
     const [transactionText, setTransactionText] = useState('');
-    const [showModal, setShowModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
     const [explicit, setExplicit] = useState(false);
     const [album, setAlbum] = useState<IAlbum>();
     const [albumKey, setAlbumKey] = useState('');
@@ -41,8 +45,22 @@ export default function Song(){
             };
             const newSongInfo = await updateSongByKey(newSongData);
             setSongInfo(newSongInfo);
-            setShowModal(false);
+            setShowEditModal(false);
             enqueueSnackbar({message: 'Song updated successfully', variant: 'success'});
+        }
+    }
+
+    async function deleteSong() {
+        if(songInfo){
+            enqueueSnackbar({message: 'Deleting data from server', variant: 'info'});
+            try{
+                await deleteSongByKey(songInfo.key);
+                enqueueSnackbar({message: 'Album deleted successfully', variant: 'success'});
+            }catch(error){
+                enqueueSnackbar({message: 'Something went wrong', variant: 'error'});
+                if(isAxiosError(error))
+                    enqueueSnackbar({message: capitalizeFirstLetter(error.response?.data), variant: 'error'});
+            }
         }
     }
 
@@ -66,11 +84,11 @@ export default function Song(){
     
     return <>
         {
-            showModal &&
+            showEditModal &&
             <Modal 
                 title={`Editar ${songInfo?.title}`} 
                 confirmText="Salvar"
-                onClose={() => {setShowModal(false)}}
+                onClose={() => {setShowEditModal(false)}}
                 onConfirm={() => {updateSongInfo(explicit, albumKey)}}
             >
                 <SongEditForm 
@@ -81,7 +99,25 @@ export default function Song(){
                 />
             </Modal>
         }
-        <InfoPageHeader title={songInfo?.title ? songInfo?.title : 'Song Title' } onEdit={() => {setShowModal(true)}}></InfoPageHeader>
+        {
+            showDeleteModal && 
+            <Modal
+                title={`Delete ${songInfo?.title}`}
+                confirmText="Delete"
+                onClose={() => {setShowDeleteModal(false)}}
+                onConfirm={() => deleteSong()}
+            >
+                <InfoSection>
+                    <InfoSectionTitle>Are you Sure?</InfoSectionTitle>
+                    <p>This action cannot be undone. All values associated with this album will be lost.</p>
+                </InfoSection>
+            </Modal>
+        }
+        <InfoPageHeader 
+            title={songInfo?.title || 'Song Title' } 
+            onEdit={() => {setShowEditModal(true)}}
+            onDelete={() => {setShowDeleteModal(true)}}
+        />
         <p>{transactionText}</p>
         <InfoSection>
             <InfoSectionTitle>Description</InfoSectionTitle>
