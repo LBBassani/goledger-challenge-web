@@ -138,7 +138,7 @@ export async function searchAlbums(search:string, bookmark?: string) : Promise<{
                 }})
             },
             limit: 12,
-            ...(newBookmark && {bookmark: newBookmark})
+            ...(newBookmark && newBookmark !== 'nil' && {bookmark: newBookmark})
         }
     };
     const nextResponse = await axios.post(endpoint, nextQuery);

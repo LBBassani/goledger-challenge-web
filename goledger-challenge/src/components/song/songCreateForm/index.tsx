@@ -24,7 +24,7 @@ export default function SongCreateForm({onClose} : SongCreateFormProps){
     const [albumOptions, setAlbumOptions] = useState<Array<{label: string, value: string}>>([{label: 'Aguarde', value: 'null-album'}]);
     const [artistOptions, setArtistOptions] = useState<Array<{label: string, value: string}>>([{label: 'Aguarde', value: 'null-artist'}]);
     async function getAlbumOptions() {
-        const albumList = await searchAlbums('');
+        const {albumList} = await searchAlbums('');
         if(albumList){
             const albumOptionsList = albumList.map((albumOption) => {return {label: albumOption.title, value: albumOption.key}});
             setAlbumOptions(albumOptionsList);
@@ -32,7 +32,7 @@ export default function SongCreateForm({onClose} : SongCreateFormProps){
     }
 
     async function getArtistOptions() {
-        const artistList = await searchArtists('');
+        const {artistList} = await searchArtists('');
         if(artistList){
             const artistOptionsList = artistList.map((artist) => {return {label: artist.name, value: artist.key}});
             setArtistOptions(artistOptionsList);

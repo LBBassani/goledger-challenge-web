@@ -29,7 +29,7 @@ export async function searchPlaylist(search: string, bookmark?: string) : Promis
                 }})
             },
             limit: 12,
-            ...(newBookmark && {bookmark: newBookmark})
+            ...(newBookmark && newBookmark !== 'nil' && {bookmark: newBookmark})
         }
     };
     const nextResponse = await axios.post(endpoint, nextQuery);

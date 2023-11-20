@@ -79,7 +79,7 @@ export async function searchArtists(search:string, bookmark?: string) : Promise<
                 }})
             },
             limit: 12,
-            ...(newBookmark && {bookmark: newBookmark})
+            ...(newBookmark && newBookmark !== 'nil' && {bookmark: newBookmark})
         }
     };
 

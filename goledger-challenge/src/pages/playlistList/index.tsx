@@ -16,17 +16,16 @@ export default function PlaylistList(){
     const [nextPageBookmark, setBookmark] = useState('');
     const {searchString, setShowSearchBar} = useContext(SearchContext);
 
-    async function fetchPlaylists(search:string, bookmark?: string) {
+    async function fetchPlaylists(oldList: Array<IPlaylist>, search:string, bookmark?: string) {
         const {playlistList: playlistsAsset, bookmark : newBookmark} = await searchPlaylist(search, bookmark);
-        setPlaylistList([...playlistList,...playlistsAsset]);
+        setPlaylistList([...oldList,...playlistsAsset]);
         setBookmark(newBookmark || '');
         enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     useEffect(()=> {
         enqueueSnackbar({message: 'Loading...', variant: 'info'});
-        setPlaylistList([]);
-        fetchPlaylists(searchString);
+        fetchPlaylists([], searchString);
     }, [searchString]);
 
     useEffect(() => {
@@ -61,7 +60,7 @@ export default function PlaylistList(){
                 nextPageBookmark &&
                 <Button variant="primary" onClick={() =>{ 
                     enqueueSnackbar({message: 'Loading...', variant: 'info'});
-                    fetchPlaylists(searchString, nextPageBookmark);
+                    fetchPlaylists(playlistList, searchString, nextPageBookmark);
                 }}>Load More Playlists</Button>
             }
         </InfoSection>

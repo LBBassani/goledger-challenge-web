@@ -21,7 +21,7 @@ export default function PlaylistCreateForm({onClose}: PlaylistCreateFormProps){
     const navigate = useNavigate();
 
     async function getSongOptions() {
-        const songListAsset = await searchSongs('');
+        const {songList: songListAsset} = await searchSongs('');
         const newSongOptions = songListAsset.map((songAsset) => {
             return {label: songAsset.title, value: songAsset.key}
         })
@@ -43,7 +43,6 @@ export default function PlaylistCreateForm({onClose}: PlaylistCreateFormProps){
             enqueueSnackbar({message: 'Playlist created successfully', variant: 'success'});
             navigate(`/playlist/${newPlaylist['@key']}`);
         }catch(error){
-            console.log(error);
             enqueueSnackbar({message: 'Something went wrong', variant: 'error'});
             if(isAxiosError(error)) enqueueSnackbar({message: error.response?.data, variant: 'error'});
         }

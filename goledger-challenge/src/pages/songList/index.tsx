@@ -16,17 +16,16 @@ export default function SongList(){
     const [nextPageBookmark, setBookmark] = useState('');
     const {searchString, setShowSearchBar} = useContext(SearchContext);
 
-    async function fetchSongs(search : string, nextBookmark?: string) {
+    async function fetchSongs(oldList: Array<ISong>, search : string, nextBookmark?: string) {
         const {songList, bookmark} = await searchSongs(search, nextBookmark);
-        setSongList([...songs, ...songList]);
+        setSongList([...oldList, ...songList]);
         setBookmark(bookmark || '');
         enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     useEffect(()=> {
         enqueueSnackbar({message: 'Loading...', variant: 'info'});
-        setSongList([]);
-        fetchSongs(searchString);
+        fetchSongs([], searchString);
     },[searchString])
 
     useEffect(() => {
@@ -58,7 +57,7 @@ export default function SongList(){
                 nextPageBookmark &&
                 <Button variant="primary" onClick={() => {
                     enqueueSnackbar({message: 'Loading...', variant: 'info'});
-                    fetchSongs(searchString, nextPageBookmark);
+                    fetchSongs(songs, searchString, nextPageBookmark);
                 }}>Load More Songs</Button>
             }
         </InfoSection>

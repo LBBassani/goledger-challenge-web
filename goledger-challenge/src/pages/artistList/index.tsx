@@ -16,17 +16,16 @@ export default function ArtistList(){
     const [nextPageBookmark, setBookmark] = useState('');
     const {searchString, setShowSearchBar} = useContext(SearchContext);
 
-    async function fetchArtists(search : string, bookmark?: string) {
+    async function fetchArtists(oldList: Array<IArtist>,search : string, bookmark?: string) {
         const {artistList: artists, bookmark: newBookmark} = await searchArtists(search, bookmark);
-        setArtistList([...artistList,...artists]);
+        setArtistList([...oldList,...artists]);
         setBookmark(newBookmark || '');
         enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
   
     useEffect(()=> {
         enqueueSnackbar({message: 'Loading...', variant: 'info'});  
-        setArtistList([]);
-        fetchArtists(searchString);
+        fetchArtists([], searchString);
     },[searchString])
 
     useEffect(() => {
@@ -59,7 +58,7 @@ export default function ArtistList(){
                 nextPageBookmark &&
                 <Button variant="primary" onClick={() => {
                     enqueueSnackbar({message: 'Loading...', variant: 'info'});
-                    fetchArtists(searchString, nextPageBookmark)
+                    fetchArtists(artistList, searchString, nextPageBookmark)
                 }}>Load More Artists</Button>
             }
         </InfoSection>

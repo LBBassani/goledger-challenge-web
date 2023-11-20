@@ -23,7 +23,7 @@ export default function AlbumCreateForm({onClose}: AlbumCreateFormProps){
     const navigate = useNavigate();
 
     async function getArtistOptions() {
-        const artistList = await searchArtists('');
+        const {artistList} = await searchArtists('');
         if(artistList){
             const artistOptionsList = artistList.map((artist) => {return {label: artist.name, value: artist.key}});
             setArtistOptions(artistOptionsList);
@@ -50,7 +50,6 @@ export default function AlbumCreateForm({onClose}: AlbumCreateFormProps){
             enqueueSnackbar({message: 'Album created successfully', variant: 'success'});
             navigate(`/album/${newAlbum['@key']}`);
         }catch(error){
-            console.log(error);
             enqueueSnackbar({message: 'Something went wrong', variant: 'error'});
             if(isAxiosError(error)) enqueueSnackbar({message: error.response?.data, variant: 'error'});
         }

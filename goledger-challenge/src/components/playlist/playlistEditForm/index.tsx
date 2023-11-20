@@ -15,7 +15,7 @@ export default function PlaylistEditForm({descriptionValue, descriptionOnChange,
     const [songOptions, setSongOptions] = useState<Array<{label: string, value: string}>>([{label: 'Loading', value: 'null-song'}]);
 
     async function getSongOptions() {
-        const songListAsset = await searchSongs('');
+        const {songList: songListAsset} = await searchSongs('');
         const newSongOptions = songListAsset.map((songAsset) => {
             return {label: songAsset.title, value: songAsset.key}
         })

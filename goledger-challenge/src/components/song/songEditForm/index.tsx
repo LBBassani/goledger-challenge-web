@@ -15,7 +15,7 @@ export default function SongEditForm({explicitValue, explicitOnChange, albumValu
     const [albumOptions, setAlbumOptions] = useState<Array<{label: string, value: string}>>([{label: 'Aguarde', value: 'null-album'}]);
 
     async function getAlbumOptions() {
-        const albumList = await searchAlbums('');
+        const {albumList} = await searchAlbums('');
         if(albumList){
             const albumOptionsList = albumList.map((albumOption) => {return {label: albumOption.title, value: albumOption.key}});
             setAlbumOptions(albumOptionsList);

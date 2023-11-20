@@ -19,7 +19,6 @@ export async function createSong(title: string, explicit: boolean, albumKey: str
             
         }]
     }
-    console.log(query)
 
     const endpoint = `${import.meta.env.VITE_SERVER_URL}/invoke/createAsset`;
     const response = await axios.post(endpoint, query);

@@ -16,17 +16,16 @@ export default function AlbumList(){
     const [nextPageBookmark, setBookmark] = useState('');
     const {searchString, setShowSearchBar} = useContext(SearchContext);
 
-    async function fetchAlbums(search : string, bookmark?: string) {
+    async function fetchAlbums(oldList: Array<IAlbum>, search : string, bookmark?: string) {
         const {albumList: albums, bookmark: newBookmark} = await searchAlbums(search, bookmark);
-        setAlbumList([...albumList,...albums]);
+        setAlbumList([...oldList,...albums]);
         setBookmark(newBookmark || '');
         enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
   
     useEffect(()=> {
         enqueueSnackbar({message: 'Loading...', variant: 'info'});  
-        setAlbumList([]);
-        fetchAlbums(searchString);
+        fetchAlbums([], searchString);
     },[searchString])
 
     useEffect(() => {
@@ -61,7 +60,7 @@ export default function AlbumList(){
                 nextPageBookmark &&
                 <Button variant="primary" onClick={() =>{ 
                     enqueueSnackbar({message: 'Loading...', variant: 'info'});
-                    fetchAlbums(searchString, nextPageBookmark);
+                    fetchAlbums(albumList, searchString, nextPageBookmark);
                 }}>Load More Albums</Button>
             }
         </InfoSection>
