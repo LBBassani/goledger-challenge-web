@@ -117,10 +117,10 @@ export default function Album(){
         }
         <InfoPageHeader 
             title={albumInfo?.title ? `${albumInfo?.title} (${albumDate?.year})` : 'Album Title'}
+            subtitle={transactionText}
             onEdit={() => {setShowEditModal(true)}}
             onDelete={() => {setShowDeleteModal(true)}}
         />
-        <p>{transactionText}</p>
         <InfoSection>
             <InfoSectionTitle>Description</InfoSectionTitle>
             <p>Rating: {albumInfo?.rating || 0}</p>

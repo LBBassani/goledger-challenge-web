@@ -117,14 +117,14 @@ export default function Song(){
         }
         <InfoPageHeader 
             title={songInfo?.title || 'Song Title' } 
+            subtitle={transactionText}
             onEdit={() => {setShowEditModal(true)}}
             onDelete={() => {setShowDeleteModal(true)}}
         />
-        <p>{transactionText}</p>
         <InfoSection>
             <InfoSectionTitle>Description</InfoSectionTitle>
             <p>Explict: {songInfo?.explicit ? 'yes' : 'no'}</p>
-            <div>Album: {songInfo?.album && <AlbumPreview album={songInfo?.album}/>}</div>
+            <div style={{display: 'flex', gap: '4px'}}>Album: {songInfo?.album && <AlbumPreview album={songInfo?.album}/>}</div>
         </InfoSection>
 
         <InfoSection>

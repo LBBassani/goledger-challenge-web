@@ -15,6 +15,8 @@ export const AppLogo = styled.h1`
 
 export const AppWrapper = styled.div`
     padding: 0 16px;
+    flex: auto;
+    overflow: auto;
 `
 
 export const Button = styled.button<{variant : 'primary' | 'secondary'}>`

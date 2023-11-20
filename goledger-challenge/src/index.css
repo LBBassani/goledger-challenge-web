@@ -40,6 +40,10 @@ button, input, textarea {
   border: none;
 }
 
+p{
+  margin: 0;
+}
+
 
 @media (prefers-color-scheme: light) {
   :root {

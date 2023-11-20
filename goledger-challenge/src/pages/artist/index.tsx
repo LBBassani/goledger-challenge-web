@@ -109,8 +109,12 @@ export default function Artist(){
                 </InfoSection>
             </Modal>
         }
-            <InfoPageHeader title={artist?.name || 'Artist Name'} onEdit={() => {setShowEditModal(true)}} onDelete={() => {setShowDeleteModal(true)}}/>
-            <p>{transactionText}</p>
+            <InfoPageHeader 
+                title={artist?.name || 'Artist Name'} 
+                subtitle={transactionText}
+                onEdit={() => {setShowEditModal(true)}} 
+                onDelete={() => {setShowDeleteModal(true)}}
+            />
             <InfoSection>
                 <InfoSectionTitle>Description</InfoSectionTitle>
                 <p>About: {artist?.about}</p>

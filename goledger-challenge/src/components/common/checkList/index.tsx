@@ -1,5 +1,6 @@
 import { StyledLabel } from "../../../styles";
-import { StyledCheckBox, StyledCheckListArea, StyledCheckListWrapper } from "./styles";
+import TextInput from "../textInput";
+import { StyledCheckListArea, StyledCheckListWrapper } from "./styles";
 
 type CheckListProps = {
     label: string
@@ -22,19 +23,16 @@ export default function CheckList({label, options, values, changeValues} : Check
         <StyledCheckListArea>
             {
                 options.map((option) => {
-                    return <StyledLabel>
-                        <StyledCheckBox 
-                            type="checkbox" 
-                            value={option.value}
+                    return <TextInput 
                             key={option.value}
-                            onChange={(event) => {
-                                handleValues(option.value, event.target.checked);
+                            type="checkbox" 
+                            value={String(values.includes(option.value))}
+                            onChange={(value) => {
+                                handleValues(option.value, value === 'true');
                             }}
-                            checked={values.includes(option.value)}
-                        >
-                        </StyledCheckBox>
-                        {option.label}
-                    </StyledLabel>
+                            label={option.label}
+                            name={option.value}
+                        />
                 })
             }
         </StyledCheckListArea>

@@ -6,6 +6,7 @@ import PlaylistPreview from "../../components/playlist/playlistPreview";
 import { enqueueSnackbar } from "notistack";
 import { InfoPageHeader } from "../../components/common/infoPage";
 import PlaylistCreateForm from "../../components/playlist/playlistCreateForm";
+import { InfoSection } from "../../components/common/infoPage/styles";
 
 export default function PlaylistList(){
     const [playlistList, setPlaylistList] = useState<Array<IPlaylist>>();
@@ -33,10 +34,12 @@ export default function PlaylistList(){
             title="Playlists"
             onCreate={() => {setShowCreateModal(true)}}
         />
-        <List>
-            {playlistList?.map((playlist)=> {
-                return <PlaylistPreview playlist={playlist} key={playlist.key}/>
-            })}
-        </List>
+        <InfoSection>
+            <List>
+                {playlistList?.map((playlist)=> {
+                    return <PlaylistPreview playlist={playlist} key={playlist.key}/>
+                })}
+            </List>
+        </InfoSection>
     </>
 }

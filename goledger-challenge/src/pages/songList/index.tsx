@@ -6,6 +6,7 @@ import SongPreview from "../../components/song/songPreview";
 import { enqueueSnackbar } from "notistack";
 import { InfoPageHeader } from "../../components/common/infoPage";
 import SongCreateForm from "../../components/song/songCreateForm";
+import { InfoSection } from "../../components/common/infoPage/styles";
 
 export default function SongList(){
     const [songList, setSongList] = useState<Array<ISong>>();
@@ -29,10 +30,12 @@ export default function SongList(){
             />
         }
         <InfoPageHeader title="Songs" onCreate={() => setShowCreateModal(true)}/>
-        <List>
-            {songList?.map((song) => {
-                return <SongPreview song={song} key={song.key}/>
-            })}
-        </List>
+        <InfoSection>
+            <List>
+                {songList?.map((song) => {
+                    return <SongPreview song={song} key={song.key}/>
+                })}
+            </List>
+        </InfoSection>
     </>
 }

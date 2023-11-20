@@ -109,10 +109,10 @@ export default function Playlist(){
           }
           <InfoPageHeader 
                title={playlistInfo?.name || 'Playlist'}
+               subtitle={transactionText}
                onEdit={() => {setShowEditModal(true)}}
                onDelete={() => {setShowDeleteModal(true)}}
           />
-          <p>{transactionText}</p>
           <InfoSection>
                <InfoSectionTitle>Description</InfoSectionTitle>
                <p>About: {playlistInfo?.description}</p>

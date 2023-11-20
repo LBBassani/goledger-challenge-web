@@ -6,6 +6,7 @@ import IArtist from "../../types/artist";
 import { enqueueSnackbar } from "notistack";
 import { InfoPageHeader } from "../../components/common/infoPage";
 import ArtistCreateForm from "../../components/artist/artistCreateForm";
+import { InfoSection } from "../../components/common/infoPage/styles";
 
 export default function ArtistList(){
     const [artistList, setArtistList] = useState<Array<IArtist>>();
@@ -31,10 +32,12 @@ export default function ArtistList(){
             title="Artists"
             onCreate={() => {setShowCreateModal(true)}} 
         />
-        <List>
-            {artistList?.map((artist) => {
-                return <ArtistPreview artist={artist} key={artist.key}/>
-            })}
-        </List>
+        <InfoSection>
+            <List>
+                {artistList?.map((artist) => {
+                    return <ArtistPreview artist={artist} key={artist.key}/>
+                })}
+            </List>
+        </InfoSection>
     </>
 }

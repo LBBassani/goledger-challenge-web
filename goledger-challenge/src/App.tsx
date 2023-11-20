@@ -10,7 +10,7 @@ function App() {
   const [searchString, setSearchString] = useState('');
   
   return (
-    <>
+    <div style={{display:'flex', flexDirection: 'column', height: '100vh' }}>
      <SnackbarProvider />
      <header>
       <AppHeader>
@@ -22,7 +22,7 @@ function App() {
      <AppWrapper>
       <Outlet/>
      </AppWrapper>
-    </>
+    </div>
   )
 }
 

@@ -6,6 +6,7 @@ import AlbumPreview from "../../components/album/albumPreview";
 import { enqueueSnackbar } from "notistack";
 import { InfoPageHeader } from "../../components/common/infoPage";
 import AlbumCreateForm from "../../components/album/albumCreateForm";
+import { InfoSection } from "../../components/common/infoPage/styles";
 
 export default function AlbumList(){
     const [albumList, setAlbumList] = useState<Array<IAlbum>>();
@@ -33,10 +34,12 @@ export default function AlbumList(){
             title="Albums"
             onCreate={() => {setShowCreateModal(true)}}
         />
-        <List>
-            {albumList?.map((album) => {
-            return <AlbumPreview album={album} key={album.key}/>
-            })}
-        </List>
+        <InfoSection>
+            <List>
+                {albumList?.map((album) => {
+                return <AlbumPreview album={album} key={album.key}/>
+                })}
+            </List>
+        </InfoSection>
     </>
 }
