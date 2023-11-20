@@ -121,7 +121,7 @@ export default function Song(){
             >
                 <InfoSection>
                     <InfoSectionTitle>Are you Sure?</InfoSectionTitle>
-                    <p>This action cannot be undone. All values associated with this album will be lost.</p>
+                    <p>This action cannot be undone. All values associated with this song will be lost.</p>
                 </InfoSection>
             </Modal>
         }

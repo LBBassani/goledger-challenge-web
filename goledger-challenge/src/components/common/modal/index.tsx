@@ -25,8 +25,8 @@ export default function Modal({children, title, onClose, closeText, onConfirm, c
                 {children}
             </ModalContent>
             <ModalFooter>
-                <Button variant="secondary" onClick={onClose}>{closeText || 'Cancelar'}</Button>
-                <Button variant="primary" onClick={onConfirm}>{confirmText || 'Confirmar'}</Button>
+                <Button variant="secondary" onClick={onClose}>{closeText || 'Cancel'}</Button>
+                <Button variant="primary" onClick={onConfirm}>{confirmText || 'Confirm'}</Button>
             </ModalFooter>
         </ModalWrapper>
     </Overlay>
