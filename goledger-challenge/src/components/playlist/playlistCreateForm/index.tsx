@@ -7,6 +7,7 @@ import CheckList from '../../common/checkList';
 import { enqueueSnackbar } from 'notistack';
 import { isAxiosError } from 'axios';
 import createPlaylist from '../../../api/playlistApi/createPlaylist';
+import { Button } from '../../../styles';
 
 type PlaylistCreateFormProps = {
     onClose: () => void
@@ -18,20 +19,22 @@ export default function PlaylistCreateForm({onClose}: PlaylistCreateFormProps){
     const [playlistDescription, setPlaylistDescription] = useState('');
     const [songKeyList, setSongKeyList] = useState<Array<string>>([]);
     const [songOptions, setSongOptions] = useState<Array<{label: string, value: string}>>([{label: 'Loading', value: 'null-song'}]);
+    const [songOptionsBookmark, setSongOptionsBookmark] = useState('');
     const navigate = useNavigate();
 
-    async function getSongOptions() {
-        const {songList: songListAsset} = await searchSongs('');
+    async function getSongOptions(oldSongOptions: Array<{label: string, value: string}>, bookmark?: string) {
+        const {songList: songListAsset, bookmark: newBookmark} = await searchSongs('', bookmark);
+        setSongOptionsBookmark(newBookmark || '')
         const newSongOptions = songListAsset.map((songAsset) => {
             return {label: songAsset.title, value: songAsset.key}
         })
-        setSongOptions(newSongOptions);
+        setSongOptions([...oldSongOptions, ...newSongOptions]);
     }
 
     function closeForm(){
         setPlaylistName('');
         setPlaylistDescription('');
-        setSongKeyList([])
+        setSongKeyList([]);
         onClose();
     }
 
@@ -49,7 +52,7 @@ export default function PlaylistCreateForm({onClose}: PlaylistCreateFormProps){
     }
     
     useEffect(() => {
-        getSongOptions()
+        getSongOptions([]);
     }, [])
 
     return <Modal
@@ -61,5 +64,16 @@ export default function PlaylistCreateForm({onClose}: PlaylistCreateFormProps){
         <TextInput name='name' type='text' label='Name' value={playlistName} onChange={setPlaylistName}/>
         <TextInput name='description' type='textarea' label='Description' value={playlistDescription} onChange={setPlaylistDescription}/>
         <CheckList label='Songs' options={songOptions} values={songKeyList} changeValues={setSongKeyList}/>
+        <>
+            {
+                songOptionsBookmark && 
+                <Button variant="primary" onClick={() => {
+                    enqueueSnackbar({message: 'Loading...', variant: 'info'});
+                    getSongOptions(songOptions, songOptionsBookmark);
+                }}>
+                    Load More Songs
+                </Button>
+            }
+        </>
     </Modal>
 }

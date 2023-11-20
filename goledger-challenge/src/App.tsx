@@ -19,7 +19,7 @@ function App() {
 
   return (
     <AppWrapper>
-        <SnackbarProvider />
+        <SnackbarProvider anchorOrigin={{horizontal: 'right', vertical: 'bottom'}} />
         <SearchContext.Provider value={{
             searchString, 
             setSearchString,

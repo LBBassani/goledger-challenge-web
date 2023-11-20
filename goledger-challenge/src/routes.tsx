@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import Artist from "./pages/artist";
 import Song from "./pages/song";
@@ -14,9 +14,12 @@ const router = createBrowserRouter([
       element: <App/>,
       children: [
         {
+          index: true,
+          element: <Navigate to='/artist'/>
+        },
+        {
           path: "/artist",
           element: <ArtistList/>,
-          index: true
         },
         {
           path: "/song",

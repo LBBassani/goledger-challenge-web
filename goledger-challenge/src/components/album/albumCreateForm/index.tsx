@@ -8,6 +8,7 @@ import { isAxiosError } from "axios";
 import TextInput from "../../common/textInput";
 import DropDown from "../../common/dropDown";
 import { DateTime } from "luxon";
+import { Button } from "../../../styles";
 
 type AlbumCreateFormProps = {
     onClose: () => void
@@ -20,18 +21,20 @@ export default function AlbumCreateForm({onClose}: AlbumCreateFormProps){
     const [albumReleaseDate, setAlbumReleaseDate] = useState('');
     const [artistKey, setArtistKey] = useState('');
     const [artistOptions, setArtistOptions] = useState<Array<{label: string, value: string}>>([{label: 'Aguarde', value: 'null-artist'}]);
+    const [artistOptionsBookmark, setArtistOptionsBookmark] = useState('');
     const navigate = useNavigate();
 
-    async function getArtistOptions() {
-        const {artistList} = await searchArtists('');
+    async function getArtistOptions(oldArtistOptions: Array<{label: string, value: string}>, bookmark?: string) {
+        const {artistList, bookmark: newBookmark} = await searchArtists('', bookmark);
+        setArtistOptionsBookmark(newBookmark || '');
         if(artistList){
             const artistOptionsList = artistList.map((artist) => {return {label: artist.name, value: artist.key}});
-            setArtistOptions(artistOptionsList);
+            setArtistOptions([...oldArtistOptions, ...artistOptionsList]);
         }
     }
 
     useEffect(() => {
-        getArtistOptions();
+        getArtistOptions([]);
     }, [])
 
     function closeForm(){
@@ -65,5 +68,16 @@ export default function AlbumCreateForm({onClose}: AlbumCreateFormProps){
             <TextInput type="number" label="Rating" name="rating" value={String(albumRating)} onChange={(value) => {setAlbumRating(parseInt(value))}}/>
             <TextInput type="date" label="Release Date" name="releaseDate" value={albumReleaseDate} onChange={setAlbumReleaseDate}/>
             <DropDown label="Artist" name="artist" onChange={setArtistKey} value={artistKey} options={artistOptions} />
+            <>
+                {
+                    artistOptionsBookmark && 
+                    <Button variant="primary" onClick={() => {
+                        enqueueSnackbar({message: 'Loading...', variant: 'info'});
+                        getArtistOptions(artistOptions, artistOptionsBookmark);
+                    }}>
+                        Load More Artists
+                    </Button>
+                }
+            </>
         </Modal>
 }
