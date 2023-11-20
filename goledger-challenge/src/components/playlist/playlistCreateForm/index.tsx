@@ -29,6 +29,7 @@ export default function PlaylistCreateForm({onClose}: PlaylistCreateFormProps){
             return {label: songAsset.title, value: songAsset.key}
         })
         setSongOptions([...oldSongOptions, ...newSongOptions]);
+        if(bookmark) enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     function closeForm(){

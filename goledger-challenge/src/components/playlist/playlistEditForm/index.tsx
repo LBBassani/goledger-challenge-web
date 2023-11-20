@@ -24,6 +24,7 @@ export default function PlaylistEditForm({descriptionValue, descriptionOnChange,
             return {label: songAsset.title, value: songAsset.key}
         })
         setSongOptions([...oldSongOptions, ...newSongOptions]);
+        if(bookmark) enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     useEffect(() => {

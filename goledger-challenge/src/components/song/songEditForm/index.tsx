@@ -23,6 +23,7 @@ export default function SongEditForm({explicitValue, explicitOnChange, albumValu
             const albumOptionsList = albumList.map((albumOption) => {return {label: albumOption.title, value: albumOption.key}});
             setAlbumOptions([...oldAlbumOptions, ...albumOptionsList]);
         }
+        if(bookmark) enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     useEffect(() => {

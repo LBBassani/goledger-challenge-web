@@ -34,6 +34,7 @@ export default function SongCreateForm({onClose} : SongCreateFormProps){
             const albumOptionsList = albumList.map((albumOption) => {return {label: albumOption.title, value: albumOption.key}});
             setAlbumOptions([...oldAlbumOptions, ...albumOptionsList]);
         }
+        if(bookmark) enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     async function getArtistOptions(oldArtistOptions: Array<{label: string, value: string}>, bookmark?: string) {
@@ -43,6 +44,7 @@ export default function SongCreateForm({onClose} : SongCreateFormProps){
             const artistOptionsList = artistList.map((artist) => {return {label: artist.name, value: artist.key}});
             setArtistOptions([...oldArtistOptions, ...artistOptionsList]);
         }
+        if(bookmark) enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     useEffect(() => {

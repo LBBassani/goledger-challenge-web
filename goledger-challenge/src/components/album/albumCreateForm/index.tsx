@@ -31,6 +31,7 @@ export default function AlbumCreateForm({onClose}: AlbumCreateFormProps){
             const artistOptionsList = artistList.map((artist) => {return {label: artist.name, value: artist.key}});
             setArtistOptions([...oldArtistOptions, ...artistOptionsList]);
         }
+        if(bookmark) enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     useEffect(() => {
