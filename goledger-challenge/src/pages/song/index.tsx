@@ -17,11 +17,15 @@ import { deleteSongByKey } from "../../api/songApi/deleteSong";
 import { isAxiosError } from "axios";
 import capitalizeFirstLetter from "../../utils/capitalizeFirstLetter";
 import { SearchContext } from "../../App";
+import IPlaylist from "../../types/playlist";
+import { getPlaylistsBySongKey } from "../../api/playlistApi/getPlaylist";
+import PlaylistPreview from "../../components/playlist/playlistPreview";
 
 export default function Song(){
     const {id} = useParams();
     const {setShowSearchBar, setSearchString} = useContext(SearchContext);
     const [songInfo, setSongInfo] = useState<ISong>();
+    const [playlistList, setPlaylistList] = useState<Array<IPlaylist>>([]);
     const [transactionText, setTransactionText] = useState('');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -33,6 +37,8 @@ export default function Song(){
     async function fetchSongInfo(key: string) {
         const songAsset = await getSongByKey(key);
         setSongInfo(songAsset);
+        const playlistAssets = await getPlaylistsBySongKey(key);
+        setPlaylistList(playlistAssets);
         enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
@@ -136,6 +142,15 @@ export default function Song(){
         <List>
             {songInfo?.artists?.map((artist) => {
                 return <ArtistPreview artist={artist} key={artist.key}/>
+            })}
+        </List>
+        </InfoSection>
+
+        <InfoSection>
+        <InfoSectionTitle>Playlists</InfoSectionTitle>
+        <List>
+            {playlistList?.map((playlist)=> {
+                return <PlaylistPreview playlist={playlist} key={playlist.key}/>
             })}
         </List>
         </InfoSection>

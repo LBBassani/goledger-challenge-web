@@ -68,3 +68,38 @@ export async function getPlaylistByKey(id:string) : Promise<IPlaylist> {
         }
     }
 }
+
+export async function getPlaylistsBySongKey(id: string): Promise<Array<IPlaylist>>{
+    const query = {
+        query: {
+            selector: {
+                '@assetType': 'playlist',
+                songs : {
+                    '$elemMatch' : {
+                        '@key' : id 
+                    }
+                }
+            }
+        }
+    };
+    const endpoint = `${import.meta.env.VITE_SERVER_URL}/query/search`;
+    const response = await axios.post(endpoint, query);
+
+    const playlistAssetList = response.data.result;
+    const playlistList : Array<IPlaylist> = await Promise.all((playlistAssetList.map(async (playlistAsset: { [x: string]: any; name: any; description: any; songs: string | any[]; }) : Promise<IPlaylist>=> {
+        return{
+            key: playlistAsset['@key'],
+            assetType: playlistAsset['@assetType'],
+            name: playlistAsset.name,
+            description: playlistAsset.description,
+            size: playlistAsset.songs?.length || 0,
+            lastTouch: {
+                byWho: playlistAsset['@lastTouchBy'],
+                transactionType: playlistAsset['@lastTx']
+            } 
+        }
+    })))
+
+    return playlistList;
+
+}
