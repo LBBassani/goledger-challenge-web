@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getPlaylistByKey } from "../../api/playlistApi/getPlaylist";
 import IPlaylist from "../../types/playlist";
@@ -14,9 +14,11 @@ import { updatePlaylistByKey } from "../../api/playlistApi/updatePlaylist";
 import { deletePlaylistByKey } from "../../api/playlistApi/deletePlaylist";
 import { isAxiosError } from "axios";
 import capitalizeFirstLetter from "../../utils/capitalizeFirstLetter";
+import { SearchContext } from "../../App";
 
 export default function Playlist(){
      const {id} = useParams();
+     const {setSearchString, setShowSearchBar} = useContext(SearchContext);
      const [playlistInfo, setPlaylistInfo] = useState<IPlaylist>();
      const [transactionText, setTransactionText] = useState('');
      const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -63,6 +65,8 @@ export default function Playlist(){
 
      useEffect(() => {
           enqueueSnackbar({message: 'Loading...', variant: 'info'});
+          setSearchString('');
+          setShowSearchBar(false);
      }, [])
 
      useEffect(()=> {

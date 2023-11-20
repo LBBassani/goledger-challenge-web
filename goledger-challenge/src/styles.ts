@@ -5,15 +5,24 @@ export const AppHeader = styled.div`
     justify-content: space-between;
     align-items: center;
     background-color: dimgrey;
+    box-shadow: 1px 2px 2px #00000026;
     padding: 0 16px;
     color: white;
+    position: relative;
+    z-index: 20;
+`
+
+export const AppWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 `
 
 export const AppLogo = styled.h1`
     font-size: 32px;
 `
 
-export const AppWrapper = styled.div`
+export const AppContentWrapper = styled.div`
     padding: 0 16px;
     flex: auto;
     overflow: auto;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAlbumByKey } from "../../api/albumApi/getAlbum";
 import IAlbum from "../../types/album";
@@ -19,9 +19,11 @@ import { updateAlbumByKey } from "../../api/albumApi/updateAlbum";
 import { deleteAlbumByKey } from "../../api/albumApi/deleteAlbum";
 import { isAxiosError } from "axios";
 import capitalizeFirstLetter from "../../utils/capitalizeFirstLetter";
+import { SearchContext } from "../../App";
 
 export default function Album(){
     const {id} = useParams();
+    const {setSearchString, setShowSearchBar} = useContext(SearchContext);
     const [albumInfo, setAlbumInfo] = useState<IAlbum>();
     const [songList, setSongList] = useState<Array<ISong>>();
     const [albumDate, setAlbumDate] = useState<DateTime>(DateTime.now());
@@ -72,6 +74,8 @@ export default function Album(){
 
     useEffect(() => {
         enqueueSnackbar({message: 'Loading...', variant: 'info'});
+        setSearchString('');
+        setShowSearchBar(false);
     }, [])
 
     useEffect(() => {

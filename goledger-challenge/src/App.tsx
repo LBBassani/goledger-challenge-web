@@ -1,28 +1,43 @@
-import { useState } from 'react'
+import { createContext, useState } from 'react'
 import { Outlet } from 'react-router-dom';
 import NavigationBar from './components/common/navigationBar';
-import { AppHeader, AppLogo, AppWrapper } from './styles';
+import { AppHeader, AppLogo, AppContentWrapper, AppWrapper } from './styles';
 import SearchBar from './components/common/searchBar';
 import { SnackbarProvider } from 'notistack';
 
+export const SearchContext = createContext({
+    searchString: '', 
+    setSearchString: (_searchString: string) => {},
+    showSearchBar: true,
+    setShowSearchBar: (_showSearchBar: boolean) => {}
+});
+
 function App() {
 
-  const [searchString, setSearchString] = useState('');
-  
+    const [searchString, setSearchString] = useState('');
+    const [showSearchBar, setShowSearchBar] = useState(true);
+
   return (
-    <div style={{display:'flex', flexDirection: 'column', height: '100vh' }}>
-     <SnackbarProvider />
-     <header>
-      <AppHeader>
-        <AppLogo>GoMusic</AppLogo>
-        <NavigationBar/>
-      </AppHeader>
-      <SearchBar/>
-     </header>
-     <AppWrapper>
-      <Outlet/>
-     </AppWrapper>
-    </div>
+    <AppWrapper>
+        <SnackbarProvider />
+        <SearchContext.Provider value={{
+            searchString, 
+            setSearchString,
+            showSearchBar,
+            setShowSearchBar
+        }}>
+            <header>
+            <AppHeader>
+                <AppLogo>GoMusic</AppLogo>
+                <NavigationBar/>
+            </AppHeader>
+            {showSearchBar && <SearchBar/>}
+            </header>
+            <AppContentWrapper>
+            <Outlet/>
+            </AppContentWrapper>
+        </SearchContext.Provider>
+    </AppWrapper>
   )
 }
 

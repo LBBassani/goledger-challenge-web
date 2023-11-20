@@ -7,7 +7,10 @@ export async function searchPlaylist(search: string) : Promise<Array<IPlaylist>>
     const query = {
         query: {
             selector: {
-                '@assetType': 'playlist'
+                '@assetType': 'playlist',
+                ...(search && {name: {
+                    '$regex' : `(.*)${search}(.*)`
+                }})
             }
         }
     };

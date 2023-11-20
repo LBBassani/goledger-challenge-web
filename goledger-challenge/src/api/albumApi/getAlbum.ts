@@ -101,6 +101,9 @@ export async function searchAlbums(search:string) {
         query: {
             selector: {
                 '@assetType': 'album',
+                ...(search && {title: {
+                    '$regex' : `(.*)${search}(.*)`
+                }})
             }
         }
     };

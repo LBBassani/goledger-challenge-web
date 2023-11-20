@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import IAlbum from "../../types/album"
 import { searchAlbums } from "../../api/albumApi/getAlbum";
 import List from "../../components/common/list";
@@ -7,10 +7,12 @@ import { enqueueSnackbar } from "notistack";
 import { InfoPageHeader } from "../../components/common/infoPage";
 import AlbumCreateForm from "../../components/album/albumCreateForm";
 import { InfoSection } from "../../components/common/infoPage/styles";
+import { SearchContext } from "../../App";
 
 export default function AlbumList(){
     const [albumList, setAlbumList] = useState<Array<IAlbum>>();
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const {searchString, setShowSearchBar} = useContext(SearchContext);
 
     async function fetchAlbums(search : string) {
         const albums = await searchAlbums(search);
@@ -20,8 +22,12 @@ export default function AlbumList(){
   
     useEffect(()=> {
         enqueueSnackbar({message: 'Loading...', variant: 'info'});  
-        fetchAlbums('');
-    },[])
+        fetchAlbums(searchString);
+    },[searchString])
+
+    useEffect(() => {
+        setShowSearchBar(true);
+    }, [])
 
     return <>
         {

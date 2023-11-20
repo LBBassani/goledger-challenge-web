@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import List from "../../components/common/list";
 import { searchPlaylist } from "../../api/playlistApi/getPlaylist";
 import IPlaylist from "../../types/playlist";
@@ -7,10 +7,12 @@ import { enqueueSnackbar } from "notistack";
 import { InfoPageHeader } from "../../components/common/infoPage";
 import PlaylistCreateForm from "../../components/playlist/playlistCreateForm";
 import { InfoSection } from "../../components/common/infoPage/styles";
+import { SearchContext } from "../../App";
 
 export default function PlaylistList(){
     const [playlistList, setPlaylistList] = useState<Array<IPlaylist>>();
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const {searchString, setShowSearchBar} = useContext(SearchContext);
 
     async function fetchPlaylists(search:string) {
         const playlistsAsset = await searchPlaylist(search);
@@ -20,8 +22,12 @@ export default function PlaylistList(){
 
     useEffect(()=> {
         enqueueSnackbar({message: 'Loading...', variant: 'info'});
-        fetchPlaylists('');
-    }, []);
+        fetchPlaylists(searchString);
+    }, [searchString]);
+
+    useEffect(() => {
+        setShowSearchBar(true);
+    }, [])
     
     return <>
         {

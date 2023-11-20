@@ -58,6 +58,9 @@ export async function searchArtists(search:string) {
         query: {
             selector: {
                 '@assetType': 'artist',
+                ...(search && {name: {
+                    '$regex' : `(.*)${search}(.*)`
+                }})
             }
         }
     };

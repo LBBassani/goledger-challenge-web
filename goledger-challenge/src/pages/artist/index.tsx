@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { getArtistByKey } from "../../api/artistApi/getArtist";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import IArtist from "../../types/artist";
 import { getSongsByArtistKey } from "../../api/songApi/getSong";
 import ISong from "../../types/song";
@@ -19,9 +19,11 @@ import { updateArtistByKey } from "../../api/artistApi/updateArtist";
 import { deleteArtistByKey } from "../../api/artistApi/deleteArtist";
 import { isAxiosError } from "axios";
 import capitalizeFirstLetter from "../../utils/capitalizeFirstLetter";
+import { SearchContext } from "../../App";
 
 export default function Artist(){
     const {id} = useParams();
+    const {setSearchString, setShowSearchBar} = useContext(SearchContext);
     const [artist, setArtist] = useState<IArtist>();
     const [songList, setSongList] = useState<ISong[]>();
     const [albumList, setAlbumList] = useState<IAlbum[]>();
@@ -81,6 +83,8 @@ export default function Artist(){
 
     useEffect(() => {
         enqueueSnackbar({message: 'Loading...', variant: 'info'});
+        setSearchString('');
+        setShowSearchBar(false);
     }, [])
 
     return <>

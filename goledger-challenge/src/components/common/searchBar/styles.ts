@@ -5,6 +5,7 @@ export const SearchBarWrapper = styled.div`
     padding: 8px 16px;
     display: flex;
     justify-content: right;
+    box-shadow: 1px 2px 2px #00000026;
 `
 
 export const SearchInputWrapper = styled.div`

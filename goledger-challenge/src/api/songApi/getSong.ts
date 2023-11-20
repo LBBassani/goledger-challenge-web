@@ -138,7 +138,10 @@ export async function searchSongs(search: string) : Promise<Array<ISong>> {
     const query = {
         query: {
             selector: {
-                '@assetType': 'song'
+                '@assetType': 'song',
+                ...(search && {title: {
+                    '$regex' : `(.*)${search}(.*)`
+                }})
             }
         }
     };
