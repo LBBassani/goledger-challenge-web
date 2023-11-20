@@ -8,20 +8,24 @@ import { InfoPageHeader } from "../../components/common/infoPage";
 import PlaylistCreateForm from "../../components/playlist/playlistCreateForm";
 import { InfoSection } from "../../components/common/infoPage/styles";
 import { SearchContext } from "../../App";
+import { Button } from "../../styles";
 
 export default function PlaylistList(){
-    const [playlistList, setPlaylistList] = useState<Array<IPlaylist>>();
+    const [playlistList, setPlaylistList] = useState<Array<IPlaylist>>([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [nextPageBookmark, setBookmark] = useState('');
     const {searchString, setShowSearchBar} = useContext(SearchContext);
 
-    async function fetchPlaylists(search:string) {
-        const playlistsAsset = await searchPlaylist(search);
-        setPlaylistList(playlistsAsset);
+    async function fetchPlaylists(search:string, bookmark?: string) {
+        const {playlistList: playlistsAsset, bookmark : newBookmark} = await searchPlaylist(search, bookmark);
+        setPlaylistList([...playlistList,...playlistsAsset]);
+        setBookmark(newBookmark || '');
         enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     useEffect(()=> {
         enqueueSnackbar({message: 'Loading...', variant: 'info'});
+        setPlaylistList([]);
         fetchPlaylists(searchString);
     }, [searchString]);
 
@@ -46,6 +50,15 @@ export default function PlaylistList(){
                     return <PlaylistPreview playlist={playlist} key={playlist.key}/>
                 })}
             </List>
+        </InfoSection>
+        <InfoSection>
+            {
+                nextPageBookmark &&
+                <Button variant="primary" onClick={() =>{ 
+                    enqueueSnackbar({message: 'Loading...', variant: 'info'});
+                    fetchPlaylists(searchString, nextPageBookmark);
+                }}>Load More Playlists</Button>
+            }
         </InfoSection>
     </>
 }

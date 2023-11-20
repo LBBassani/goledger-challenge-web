@@ -8,4 +8,5 @@ export default interface ISong extends BlockChainAsset {
     explicit : boolean,
     artists? : Array<IArtist>,
     album? : IAlbum
+    albumName?: string
 }

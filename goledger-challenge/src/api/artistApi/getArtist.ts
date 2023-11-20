@@ -53,7 +53,7 @@ export async function getArtistBriefByKey(id: string) : Promise<IArtist> {
 }
 
 /* Search artists */
-export async function searchArtists(search:string) {
+export async function searchArtists(search:string, bookmark?: string) : Promise<{artistList: Array<IArtist>, bookmark?: string}> {
     const query = {
         query: {
             selector: {
@@ -61,11 +61,31 @@ export async function searchArtists(search:string) {
                 ...(search && {name: {
                     '$regex' : `(.*)${search}(.*)`
                 }})
-            }
+            },
+            limit: 12,
+            ...(bookmark && {bookmark: bookmark})
         }
     };
     const endpoint = `${import.meta.env.VITE_SERVER_URL}/query/search`;
     const response = await axios.post(endpoint, query);
+
+    const newBookmark = response.data.metadata.bookmark;
+    const nextQuery = {
+        query: {
+            selector: {
+                '@assetType': 'artist',
+                ...(search && {name: {
+                    '$regex' : `(.*)${search}(.*)`
+                }})
+            },
+            limit: 12,
+            ...(newBookmark && {bookmark: newBookmark})
+        }
+    };
+
+    const nextResponse = await axios.post(endpoint, nextQuery);
+    const hasNext = nextResponse.data.result.length > 0;
+
 
     const artistAssetList = response.data.result;
     const artistList : Array<IArtist> = await Promise.all(artistAssetList.map(async (artistAsset: { [x: string]: any; artist: { [x: string]: string; }; rating: any; releaseDate: any; title: any; }) : Promise<IArtist> => {
@@ -81,5 +101,8 @@ export async function searchArtists(search:string) {
         }
     }))
     
-    return artistList;
+    return {
+        artistList,
+        ...(hasNext && newBookmark && { bookmark: newBookmark})
+    };
 }

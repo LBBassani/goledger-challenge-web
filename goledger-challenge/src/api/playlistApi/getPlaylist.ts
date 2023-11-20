@@ -3,7 +3,7 @@ import IPlaylist from "../../types/playlist";
 import { getSongBriefByKey } from "../songApi/getSong";
 
 /* Search playlists */
-export async function searchPlaylist(search: string) : Promise<Array<IPlaylist>>{
+export async function searchPlaylist(search: string, bookmark?: string) : Promise<{playlistList: Array<IPlaylist>, bookmark?: string}>{
     const query = {
         query: {
             selector: {
@@ -11,11 +11,29 @@ export async function searchPlaylist(search: string) : Promise<Array<IPlaylist>>
                 ...(search && {name: {
                     '$regex' : `(.*)${search}(.*)`
                 }})
-            }
+            },
+            limit: 12,
+            ...(bookmark && {bookmark: bookmark})
         }
     };
     const endpoint = `${import.meta.env.VITE_SERVER_URL}/query/search`;
     const response = await axios.post(endpoint, query);
+
+    const newBookmark = response.data.metadata.bookmark;
+    const nextQuery = {
+        query: {
+            selector: {
+                '@assetType': 'playlist',
+                ...(search && {name: {
+                    '$regex' : `(.*)${search}(.*)`
+                }})
+            },
+            limit: 12,
+            ...(newBookmark && {bookmark: newBookmark})
+        }
+    };
+    const nextResponse = await axios.post(endpoint, nextQuery);
+    const hasNext = nextResponse.data.result.length > 0;
 
     const playlistAssetList = response.data.result;
     const playlistList : Array<IPlaylist> = await Promise.all((playlistAssetList.map(async (playlistAsset: { [x: string]: any; name: any; description: any; songs: string | any[]; }) : Promise<IPlaylist>=> {
@@ -32,7 +50,10 @@ export async function searchPlaylist(search: string) : Promise<Array<IPlaylist>>
         }
     })))
 
-    return playlistList;
+    return {
+        playlistList,
+        ...(hasNext && newBookmark && { bookmark: newBookmark})
+    };
 }
 
 /* Returns the complete data of the playlist indicated by id/key */

@@ -1,6 +1,6 @@
 import axios from "axios";
 import ISong from "../../types/song";
-import { getAlbumBriefByKey } from "../albumApi/getAlbum";
+import { getAlbumBriefByKey, getAlbumNameByKey } from "../albumApi/getAlbum";
 import { getArtistBriefByKey } from "../artistApi/getArtist";
 import IArtist from "../../types/artist";
 
@@ -134,7 +134,7 @@ export async function getSongsByAlbumKey(id: string) {
 }
 
 /* Search songs */
-export async function searchSongs(search: string) : Promise<Array<ISong>> {
+export async function searchSongs(search: string, bookmark?: string) : Promise<{songList: Array<ISong>, bookmark?: string}> {
     const query = {
         query: {
             selector: {
@@ -142,26 +142,47 @@ export async function searchSongs(search: string) : Promise<Array<ISong>> {
                 ...(search && {title: {
                     '$regex' : `(.*)${search}(.*)`
                 }})
-            }
+            },
+            limit: 12,
+            ...(bookmark && {bookmark: bookmark})
         }
     };
     const endpoint = `${import.meta.env.VITE_SERVER_URL}/query/search`;
     const response = await axios.post(endpoint, query);
 
+    const newBookmark = response.data.metadata.bookmark;
+    const nextQuery = {
+        query: {
+            selector: {
+                '@assetType': 'song',
+                ...(search && {title: {
+                    '$regex' : `(.*)${search}(.*)`
+                }})
+            },
+            limit: 12,
+            ...(newBookmark && {bookmark: newBookmark})
+        }
+    };
+    const nextResponse = await axios.post(endpoint, nextQuery);
+    const hasNext = nextResponse.data.result.length > 0;
+    
     const songAssetList = response.data.result;
     const songList : Array<ISong> = await Promise.all((songAssetList.map(async (songAsset: { [x: string]: any; album: { [x: string]: string; }; artist: { [x: string]: string; }[]; title: any; explicit: any; }) : Promise<ISong> => {
-        const albumBrief = await getAlbumBriefByKey(songAsset.album['@key']);
+    const albumName = await getAlbumNameByKey(songAsset.album['@key']);
         return {
             key : songAsset['@key'],
             assetType : songAsset['@assetType'],
             title: songAsset.title,
             explicit: songAsset.explicit,
-            album: albumBrief,
+            albumName: albumName,
             lastTouch: {
                 byWho: songAsset['@lastTouchBy'],
                 transactionType: songAsset['@lastTx']
             },
         }
     })))
-    return songList;
+    return {
+        songList,
+        ...(hasNext && newBookmark && { bookmark: newBookmark})
+    };
 }

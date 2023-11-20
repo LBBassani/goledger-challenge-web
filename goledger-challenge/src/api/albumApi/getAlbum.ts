@@ -28,6 +28,22 @@ export async function getAlbumBriefByKey(id:string) : Promise<IAlbum> {
     }
 }
 
+export async function getAlbumNameByKey(id: string) : Promise<string> {
+    const query = {
+        key: {
+            '@key' : id 
+        },
+        fields: [
+            'title'
+        ]
+    };
+    const endpoint = `${import.meta.env.VITE_SERVER_URL}/query/readAsset`;
+    const response = await axios.post(endpoint, query);
+
+    const albumAsset = response.data;
+    return albumAsset.title;
+}
+
 /* Returns the complete data of the artist indicated by id/key */
 export async function getAlbumByKey(id: string) : Promise<IAlbum> {
     const query = {
@@ -96,7 +112,7 @@ export async function getAlbumsByArtistKey(id: string) : Promise<Array<IAlbum>> 
 }
 
 /* Search albums */
-export async function searchAlbums(search:string) {
+export async function searchAlbums(search:string, bookmark?: string) : Promise<{albumList: Array<IAlbum>, bookmark?: string}> {
     const query = {
         query: {
             selector: {
@@ -104,11 +120,29 @@ export async function searchAlbums(search:string) {
                 ...(search && {title: {
                     '$regex' : `(.*)${search}(.*)`
                 }})
-            }
+            },
+            limit: 12,
+            ...(bookmark && {bookmark: bookmark})
         }
     };
     const endpoint = `${import.meta.env.VITE_SERVER_URL}/query/search`;
     const response = await axios.post(endpoint, query);
+
+    const newBookmark = response.data.metadata.bookmark;
+    const nextQuery = {
+        query: {
+            selector: {
+                '@assetType': 'album',
+                ...(search && {title: {
+                    '$regex' : `(.*)${search}(.*)`
+                }})
+            },
+            limit: 12,
+            ...(newBookmark && {bookmark: newBookmark})
+        }
+    };
+    const nextResponse = await axios.post(endpoint, nextQuery);
+    const hasNext = nextResponse.data.result.length > 0;
 
     const albumAssetList = response.data.result;
     const albumList : Array<IAlbum> = await Promise.all(albumAssetList.map(async (albumAsset: { [x: string]: any; artist: { [x: string]: string; }; rating: any; releaseDate: any; title: any; }) : Promise<IAlbum> => {
@@ -127,5 +161,8 @@ export async function searchAlbums(search:string) {
         }
     }))
     
-    return albumList;
+    return {
+        albumList,
+        ...(hasNext && newBookmark && { bookmark: newBookmark})
+    };
 }

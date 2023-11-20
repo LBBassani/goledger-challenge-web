@@ -8,20 +8,24 @@ import { InfoPageHeader } from "../../components/common/infoPage";
 import SongCreateForm from "../../components/song/songCreateForm";
 import { InfoSection } from "../../components/common/infoPage/styles";
 import { SearchContext } from "../../App";
+import { Button } from "../../styles";
 
 export default function SongList(){
-    const [songList, setSongList] = useState<Array<ISong>>();
+    const [songs, setSongList] = useState<Array<ISong>>([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [nextPageBookmark, setBookmark] = useState('');
     const {searchString, setShowSearchBar} = useContext(SearchContext);
 
-    async function fetchSongs(search : string) {
-        const songs = await searchSongs(search);
-        setSongList(songs);
+    async function fetchSongs(search : string, nextBookmark?: string) {
+        const {songList, bookmark} = await searchSongs(search, nextBookmark);
+        setSongList([...songs, ...songList]);
+        setBookmark(bookmark || '');
         enqueueSnackbar({message: 'Data loaded successfully', variant: 'success'});
     }
 
     useEffect(()=> {
         enqueueSnackbar({message: 'Loading...', variant: 'info'});
+        setSongList([]);
         fetchSongs(searchString);
     },[searchString])
 
@@ -39,10 +43,19 @@ export default function SongList(){
         <InfoPageHeader title="Songs" onCreate={() => setShowCreateModal(true)}/>
         <InfoSection>
             <List>
-                {songList?.map((song) => {
+                {songs?.map((song) => {
                     return <SongPreview song={song} key={song.key}/>
                 })}
             </List>
+        </InfoSection>
+        <InfoSection>
+            {
+                nextPageBookmark &&
+                <Button variant="primary" onClick={() => {
+                    enqueueSnackbar({message: 'Loading...', variant: 'info'});
+                    fetchSongs(searchString, nextPageBookmark);
+                }}>Load More Songs</Button>
+            }
         </InfoSection>
     </>
 }
