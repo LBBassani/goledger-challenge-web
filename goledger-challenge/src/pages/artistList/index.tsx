@@ -6,7 +6,7 @@ import IArtist from "../../types/artist";
 import { enqueueSnackbar } from "notistack";
 import { InfoPageHeader } from "../../components/common/infoPage";
 import ArtistCreateForm from "../../components/artist/artistCreateForm";
-import { InfoSection } from "../../components/common/infoPage/styles";
+import { EmptyStateText, InfoSection } from "../../components/common/infoPage/styles";
 import { SearchContext } from "../../App";
 import { Button } from "../../styles";
 
@@ -43,11 +43,16 @@ export default function ArtistList(){
             onCreate={() => {setShowCreateModal(true)}} 
         />
         <InfoSection>
-            <List>
-                {artistList?.map((artist) => {
-                    return <ArtistPreview artist={artist} key={artist.key}/>
-                })}
-            </List>
+            {
+                artistList && artistList.length > 0 ?
+                <List>
+                    {artistList.map((artist) => {
+                        return <ArtistPreview artist={artist} key={artist.key}/>
+                    })}
+                </List>
+                :
+                <EmptyStateText>There is nothing to see here</EmptyStateText>
+            }
         </InfoSection>
         <InfoSection>
             {

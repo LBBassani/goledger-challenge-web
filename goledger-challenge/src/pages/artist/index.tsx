@@ -6,7 +6,7 @@ import { getSongsByArtistKey } from "../../api/songApi/getSong";
 import ISong from "../../types/song";
 import IAlbum from "../../types/album";
 import { getAlbumsByArtistKey } from "../../api/albumApi/getAlbum";
-import { InfoSection, InfoSectionTitle } from "../../components/common/infoPage/styles";
+import { EmptyStateText, InfoSection, InfoSectionTitle } from "../../components/common/infoPage/styles";
 import List from "../../components/common/list";
 import AlbumPreview from "../../components/album/albumPreview";
 import SongPreview from "../../components/song/songPreview";
@@ -125,19 +125,28 @@ export default function Artist(){
             </InfoSection>
             <InfoSection>
                 <InfoSectionTitle>Albums</InfoSectionTitle>
-                <List>
-                    {albumList?.map((album) => {
-                        return <AlbumPreview album={album} key={album.key}/>
-                    })}
-                </List>
+                {
+                    albumList && albumList.length > 0 ?
+                    <List>
+                        {albumList.map((album) => {
+                            return <AlbumPreview album={album} key={album.key}/>
+                        })}
+                    </List>
+                    :
+                    <EmptyStateText>There is nothing to see here</EmptyStateText>
+                }
             </InfoSection>
             <InfoSection>
                 <InfoSectionTitle>Songs</InfoSectionTitle>
-                <List>
-                    {songList?.map((song) => {
-                        return <SongPreview song={song} key={song.key}/>
-                    })}
-                </List>
+                {   songList && songList.length > 0 ?
+                    <List>
+                        {songList.map((song) => {
+                            return <SongPreview song={song} key={song.key}/>
+                        })}
+                    </List>
+                    :
+                    <EmptyStateText>There is nothing to see here</EmptyStateText>
+                }
             </InfoSection>
         </>
 }

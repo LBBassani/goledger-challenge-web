@@ -6,7 +6,7 @@ import AlbumPreview from "../../components/album/albumPreview";
 import { enqueueSnackbar } from "notistack";
 import { InfoPageHeader } from "../../components/common/infoPage";
 import AlbumCreateForm from "../../components/album/albumCreateForm";
-import { InfoSection } from "../../components/common/infoPage/styles";
+import { EmptyStateText, InfoSection } from "../../components/common/infoPage/styles";
 import { SearchContext } from "../../App";
 import { Button } from "../../styles";
 
@@ -45,11 +45,16 @@ export default function AlbumList(){
             onCreate={() => {setShowCreateModal(true)}}
         />
         <InfoSection>
-            <List>
-                {albumList?.map((album) => {
-                return <AlbumPreview album={album} key={album.key}/>
-                })}
-            </List>
+            {
+                albumList && albumList.length > 0 ?
+                <List>
+                    {albumList.map((album) => {
+                    return <AlbumPreview album={album} key={album.key}/>
+                    })}
+                </List>
+                :
+                <EmptyStateText>There is nothing to see here</EmptyStateText>
+            }
         </InfoSection>
         <InfoSection>
             {

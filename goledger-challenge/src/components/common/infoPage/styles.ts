@@ -32,3 +32,8 @@ export const InfoPageSubtitle = styled.div`
 export const InfoPageTitleWrapper = styled.div`
     margin-bottom: 32px;
 `
+
+export const EmptyStateText = styled.div`
+    color: darkgray;
+    font-size: 14px;
+`

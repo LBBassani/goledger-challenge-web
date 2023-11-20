@@ -5,7 +5,7 @@ import { getSongByKey } from "../../api/songApi/getSong";
 import List from "../../components/common/list";
 import ArtistPreview from "../../components/artist/artistPreview";
 import AlbumPreview from "../../components/album/albumPreview";
-import { InfoSection, InfoSectionTitle } from "../../components/common/infoPage/styles";
+import { EmptyStateText, InfoSection, InfoSectionTitle } from "../../components/common/infoPage/styles";
 import formatTransactionText from "../../utils/formatTransactionText";
 import { enqueueSnackbar } from "notistack";
 import Modal from "../../components/common/modal";
@@ -139,20 +139,30 @@ export default function Song(){
 
         <InfoSection>
         <InfoSectionTitle>Artists</InfoSectionTitle>
-        <List>
-            {songInfo?.artists?.map((artist) => {
-                return <ArtistPreview artist={artist} key={artist.key}/>
-            })}
-        </List>
+            {
+                songInfo?.artists && songInfo.artists.length > 0 ?
+                <List>
+                    {songInfo.artists.map((artist) => {
+                        return <ArtistPreview artist={artist} key={artist.key}/>
+                    })}
+                </List>
+                :
+                <EmptyStateText>There is nothing to see here</EmptyStateText>
+            }
         </InfoSection>
 
         <InfoSection>
         <InfoSectionTitle>Playlists</InfoSectionTitle>
-        <List>
-            {playlistList?.map((playlist)=> {
-                return <PlaylistPreview playlist={playlist} key={playlist.key}/>
-            })}
-        </List>
+            {
+                playlistList && playlistList.length ?
+                <List>
+                    {playlistList?.map((playlist)=> {
+                        return <PlaylistPreview playlist={playlist} key={playlist.key}/>
+                    })}
+                </List>
+                :
+                <EmptyStateText>There is nothing to see here</EmptyStateText>
+            }
         </InfoSection>
     </>
 }

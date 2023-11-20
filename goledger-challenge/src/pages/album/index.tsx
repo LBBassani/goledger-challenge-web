@@ -4,7 +4,7 @@ import { getAlbumByKey } from "../../api/albumApi/getAlbum";
 import IAlbum from "../../types/album";
 import ISong from "../../types/song";
 import { getSongsByAlbumKey } from "../../api/songApi/getSong";
-import { InfoSection, InfoSectionTitle } from "../../components/common/infoPage/styles";
+import { EmptyStateText, InfoSection, InfoSectionTitle } from "../../components/common/infoPage/styles";
 import { DateTime } from "luxon";
 import { dateWithoutHourFormat } from "../../utils/dateFormat";
 import ArtistPreview from "../../components/artist/artistPreview";
@@ -136,11 +136,15 @@ export default function Album(){
         </InfoSection>
         <InfoSection>
             <InfoSectionTitle>Songs</InfoSectionTitle>
-            <List>
-                {songList?.map((song) => {
-                    return <SongPreview song={song} key={song.key}/>
-                })}
-            </List>
+            {   songList && songList.length > 0 ?
+                <List>
+                    {songList.map((song) => {
+                        return <SongPreview song={song} key={song.key}/>
+                    })}
+                </List>
+                :
+                <EmptyStateText>There is nothing to see here</EmptyStateText>
+            }
         </InfoSection>
     </>
 }

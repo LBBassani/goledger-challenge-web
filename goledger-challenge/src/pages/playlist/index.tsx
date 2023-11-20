@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getPlaylistByKey } from "../../api/playlistApi/getPlaylist";
 import IPlaylist from "../../types/playlist";
-import { InfoSection, InfoSectionTitle } from "../../components/common/infoPage/styles";
+import { EmptyStateText, InfoSection, InfoSectionTitle } from "../../components/common/infoPage/styles";
 import List from "../../components/common/list";
 import SongPreview from "../../components/song/songPreview";
 import formatTransactionText from "../../utils/formatTransactionText";
@@ -123,11 +123,16 @@ export default function Playlist(){
           </InfoSection>
           <InfoSection>
                <InfoSectionTitle>Songs</InfoSectionTitle>
-               <List>
-                    {playlistInfo?.songs?.map((song) => {
-                         return <SongPreview song={song} key={song.key}/>
-                    })}
-               </List>
+               {
+                    playlistInfo?.songs && playlistInfo.songs.length ?
+                    <List>
+                         {playlistInfo.songs.map((song) => {
+                              return <SongPreview song={song} key={song.key}/>
+                         })}
+                    </List>
+                    :
+                    <EmptyStateText>There is nothing to see here</EmptyStateText>
+               }
           </InfoSection>
      </>
 }

@@ -6,7 +6,7 @@ import PlaylistPreview from "../../components/playlist/playlistPreview";
 import { enqueueSnackbar } from "notistack";
 import { InfoPageHeader } from "../../components/common/infoPage";
 import PlaylistCreateForm from "../../components/playlist/playlistCreateForm";
-import { InfoSection } from "../../components/common/infoPage/styles";
+import { EmptyStateText, InfoSection } from "../../components/common/infoPage/styles";
 import { SearchContext } from "../../App";
 import { Button } from "../../styles";
 
@@ -45,11 +45,16 @@ export default function PlaylistList(){
             onCreate={() => {setShowCreateModal(true)}}
         />
         <InfoSection>
-            <List>
-                {playlistList?.map((playlist)=> {
-                    return <PlaylistPreview playlist={playlist} key={playlist.key}/>
-                })}
-            </List>
+            {
+                playlistList && playlistList.length > 0 ?
+                <List>
+                    {playlistList.map((playlist)=> {
+                        return <PlaylistPreview playlist={playlist} key={playlist.key}/>
+                    })}
+                </List>
+                :
+                <EmptyStateText>There is nothing to see here</EmptyStateText>
+            }
         </InfoSection>
         <InfoSection>
             {
